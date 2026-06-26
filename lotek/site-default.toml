@@ -1,0 +1,38 @@
+# lotek.run site configuration
+# Edit site-config.toml to customize your site settings
+
+[site]
+# Site features (true/false)
+[site.features]
+robotstxt = true             # Enable/disable robots.txt generation
+rss = true                   # Enable/disable RSS feed generation
+skip_future = true           # Skip posts with future dates
+
+# RSS feed settings
+[site.rss]
+limit = 10                   # Max items in RSS feed
+timezone = "America/Los_Angeles"  # Timezone for RSS dates
+
+# Site metadata
+[site.site]
+title = "lotek site generator"    # Site title
+url = "https://localhost:8000"    # Site URL
+description = "a tiny static blog generator"  # Site description
+extra_css = ""                  # Extra CSS append
+
+# Date format (ISO 8601)
+[site.date_format]
+format = "%Y-%m-%d %H:%M:%SZ"
+
+# Navigation links (order matters)
+[[site.nav]]
+label = "index"
+href = "/"
+
+[[site.nav]]
+label = "about"
+href = "/about.html"
+
+[[site.nav]]
+label = "rss"
+href = "/feed.xml"

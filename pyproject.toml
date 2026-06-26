@@ -1,0 +1,55 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lotek"
+version = "0.3.0"
+description = "A static site builder"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.9"
+authors = [
+    {name = "Brad Arnett", email = "brad.arnett@gmail.com"},
+]
+keywords = ["static-site", "builder", "markdown"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+    "tomli>=1.2; python_version < '3.11'",
+    "markdown>=3.0",
+    "pygments>=2.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+]
+
+[project.scripts]
+lotek = "lotek.cli:main"
+
+[project.urls]
+Homepage = "https://get.lotek.run"
+Repository = "https://github.com/lotek/lotek.run"
+
+[tool.setuptools.packages.find]
+include = ["lotek*"]
+
+[tool.setuptools.package-data]
+lotek = ["templates/*", "static/*", "site-default.toml"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"
+

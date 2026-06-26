@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+
+# Build & dist
+build/
+dist/
+
+# lotek output
+output/
+
+# Dev environment
+.env
+.python-version
+.vscode/
+
+# Runtime / logs
+.deploy_log
+.pytest_cache/
+
+# User config (site-specific, not committed)
+site-config.toml
