@@ -1,12 +1,11 @@
 """static page generator — builds content/pages/*.md to output/*.html"""
 
-from lotek.lib.dirs import dirs
-from lotek.lib.site_config import config
 from lotek.lib.render import render, render_wrap, md_to_html
 from lotek.lib.frontmatter import parse_frontmatter
 
 
-def generate_pages(out):
+def generate_pages(dirs, out):
+    from lotek.lib.context import config
     pages_dir = dirs.CONTENT_PAGES
     if not pages_dir.exists():
         return
@@ -18,8 +17,8 @@ def generate_pages(out):
         print(f"info: generating page {path.stem}")
         slug = path.stem
         title = meta.get("title", slug)
-        html = md_to_html(body)
-        content = render(
+        html = md_to_html(dirs, body)
+        content = render(dirs,
             "post.html",
             {
                 "TITLE": title,
@@ -28,7 +27,7 @@ def generate_pages(out):
             },
         )
         (out / f"{slug}.html").write_text(
-            render_wrap(
+            render_wrap(dirs,
                 content,
                 f"{title} -- {config.site.title}",
                 url=f"{config.site.url}/{slug}.html",

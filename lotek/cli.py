@@ -5,7 +5,10 @@ import argparse
 from pathlib import Path
 import lotek
 
+from lotek.lib.dirs import Dirs
+from lotek.lib.site_config import load_config
 from lotek.lib.init import init
+from lotek.lib.context import update_config, update_pac
 from lotek.cmd.add import cmd_add
 from lotek.cmd.build import cmd_build
 from lotek.cmd.clean import cmd_clean
@@ -65,29 +68,41 @@ def setup_cmd_parser():
     return args
 
 def main():
+    # load config
     args = setup_cmd_parser()
+    if args.command == "init" and args.path:
+        wd = Path(args.path)
+    else:
+        wd = Path.cwd()
+    update_config(load_config(wd / "site-config.toml"))
+    _main(args, wd)
+
+def _main(args, wd):
     if not args.command:
         print(USAGE)
         return 0
+    # dirs derives from the current working directory (except init)
+    dirs = Dirs(wd)
     try:
         if args.command == "init":
+            # init is a special case and instantiates path based on an argument
             return init(Path.absolute(Path(args.path)))
         if args.command == "build":
-            return cmd_build()
+            return cmd_build(dirs)
         if args.command == "clean":
-            return cmd_clean()
+            return cmd_clean(dirs)
         if args.command == "serve":
-            return cmd_serve(args.port)
+            return cmd_serve(dirs, args.port)
         if args.command == "deploy":
-            return cmd_deploy(skip_build=args.skip_build)
+            return cmd_deploy(dirs, skip_build=args.skip_build)
         if args.command == "list":
-            return cmd_list()
+            return cmd_list(dirs )
         if args.command == "add":
-            return cmd_add(args.title)
+            return cmd_add(dirs, args.title)
         if args.command == "publish":
-            return cmd_publish(args.slug)
+            return cmd_publish(dirs, args.slug)
         if args.command == "unpublish":
-            return cmd_unpublish(args.slug)
+            return cmd_unpublish(dirs, args.slug)
     except KeyboardInterrupt:
         print("\nInterrupted")
         return 1

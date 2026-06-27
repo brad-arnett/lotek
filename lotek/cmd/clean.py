@@ -1,9 +1,8 @@
 
 import shutil
 from lotek.lib.colors import green
-from lotek.lib.dirs import dirs
 
-def cmd_clean():
+def cmd_clean(dirs):
 
     output = dirs.OUTPUT
     if output.exists():

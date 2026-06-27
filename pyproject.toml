@@ -38,8 +38,8 @@ dev = [
 lotek = "lotek.cli:main"
 
 [project.urls]
-Homepage = "https://get.lotek.run"
-Repository = "https://github.com/lotek/lotek.run"
+Homepage = "https://lotek.run"
+Repository = "https://github.com/brad-arnett/lotek.run"
 
 [tool.setuptools.packages.find]
 include = ["lotek*"]

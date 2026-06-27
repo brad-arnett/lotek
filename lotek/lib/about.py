@@ -1,17 +1,17 @@
 """generate the about page"""
 
-from lotek.lib.site_config import config
-from lotek.lib.dirs import dirs
 from lotek.lib.render import render, render_wrap, md_to_html
 from lotek.lib.frontmatter import parse_frontmatter
 
 
-def generate_about(out):
+def generate_about(dirs, out):
+    from lotek.lib.context import config
+    cfg = config
     about = dirs.CONTENT_PAGES / "about.md"
     if about.exists():
         meta, body = parse_frontmatter(about.read_text())
-        html = md_to_html(body)
-        content = render(
+        html = md_to_html(dirs, body)
+        content = render(dirs,
             "post.html",
             {
                 "TITLE": meta.get("title", "About"),
@@ -20,9 +20,9 @@ def generate_about(out):
             },
         )
         (out / "about.html").write_text(
-            render_wrap(
+            render_wrap(dirs,
                 content,
-                f"About - {config.site.title}",
-                url=f"{config.site.url}/about.html",
+                f"About - {cfg.site.title}",
+                url=f"{cfg.site.url}/about.html",
             )
         )

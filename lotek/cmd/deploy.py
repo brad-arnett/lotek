@@ -1,7 +1,6 @@
 import subprocess
 
 from lotek.lib.colors import green, red
-from lotek.lib.dirs import dirs
 from lotek.cmd.build import cmd_build
 
 def read_env():
@@ -16,7 +15,7 @@ def read_env():
     return env
 
 
-def cmd_deploy(skip_build=False):
+def cmd_deploy(dirs, skip_build=False):
     env = read_env()
     user, host, path = (
         env.get("DEPLOY_USER"),

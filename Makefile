@@ -1,7 +1,7 @@
 .PHONY: install dev test clean dist publish
 
 install:
-	pip install .
+	pip install . --break-system-packages
 
 dev:
 	pip install -e ".[dev]"

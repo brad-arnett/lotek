@@ -23,6 +23,7 @@ def init(site_path: Path) -> None:
     dirs: Dirs = Dirs(site_path)
     # Create directory structure
     site_path.mkdir(parents=True, exist_ok=True)
+    dirs.LOTEK.mkdir(exist_ok=True)
     dirs.CONTENT.mkdir(exist_ok=True)
     dirs.CONTENT_POSTS.mkdir(parents=True, exist_ok=True)
     dirs.CONTENT_PAGES.mkdir(exist_ok=True)

@@ -47,8 +47,5 @@ def load_config(config_path=None):
 
     defaults = _load_toml(DEFAULT_CONFIG_TEMPLATE_PATH).get("site", {})
     user = _load_toml(config_path).get("site", {})
-    return _ns(_merge(defaults, user))
-
-
-config = load_config()
-pac = ZoneInfo(config.rss.timezone)
+    cfg = _ns(_merge(defaults, user))
+    return cfg
