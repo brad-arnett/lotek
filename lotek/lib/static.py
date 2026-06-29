@@ -1,9 +1,8 @@
 """static directory generator"""
 
 import shutil
-from lotek.lib.dirs import dirs
 
-def wipe_and_copy_to_output_dir(out):
+def wipe_and_copy_to_output_dir(dirs, out):
     """clears out the output/static directory and copies the static/ back into it"""
     static_dst = out / "static"
     if static_dst.exists():

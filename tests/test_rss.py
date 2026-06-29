@@ -1,32 +1,37 @@
 """Test RSS feed generation."""
 
 import unittest
+import tempfile
+import shutil
 from pathlib import Path
 from unittest.mock import patch
-from lotek.lib.site_config import config
+from lotek.lib.context import config
 from lotek.plugins.rss import generate_rss
+from lotek.lib.dirs import Dirs
+from lotek.lib.init import init
 
+def get_temp_dir():
+    return Path(tempfile.mkdtemp())
 
 class TestRSSFeedGeneration(unittest.TestCase):
     """Test RSS feed generation."""
 
     def setUp(self):
-        """Set up test output directory."""
-        import tempfile
-
-        self.test_output = Path(tempfile.mkdtemp())
+        self.test_output = get_temp_dir()
+        init(self.test_output)
+        self.dirs = Dirs(self.test_output)
+        # Clean up init artifacts for isolated tests
+        (self.dirs.CONTENT_POSTS / "welcome.md").unlink(missing_ok=True)
 
     def tearDown(self):
-        """Clean up test output directory."""
-        import shutil
-
-        if self.test_output.exists():
-            shutil.rmtree(self.test_output)
+        shutil.rmtree(self.test_output)
+        self.test_output = None
+        self.dirs = None
 
     def test_feed_xml_exists(self):
         """Test feed.xml is generated."""
         posts = []
-        generate_rss(posts, self.test_output)
+        generate_rss(self.dirs, posts, self.test_output)
 
         feed_xml = self.test_output / "feed.xml"
         self.assertTrue(feed_xml.exists())
@@ -34,7 +39,7 @@ class TestRSSFeedGeneration(unittest.TestCase):
     def test_feed_xml_content(self):
         """Test feed.xml has correct RSS content."""
         posts = []
-        generate_rss(posts, self.test_output)
+        generate_rss(self.dirs, posts, self.test_output)
 
         feed_xml = self.test_output / "feed.xml"
         content = feed_xml.read_text()
@@ -48,19 +53,18 @@ class TestRSSFeedGeneration(unittest.TestCase):
     def test_feed_xml_site_info(self):
         """Test feed.xml contains site info."""
         posts = []
-        generate_rss(posts, self.test_output)
+        generate_rss(self.dirs, posts, self.test_output)
 
         feed_xml = self.test_output / "feed.xml"
         content = feed_xml.read_text()
 
-        self.assertIn("https://lotek.run", content)
         self.assertIn("https://lotek.run", content)
         self.assertIn("dispatches from the margins", content)
 
     def test_feed_xml_build_date(self):
         """Test feed.xml has build date."""
         posts = []
-        generate_rss(posts, self.test_output)
+        generate_rss(self.dirs, posts, self.test_output)
 
         feed_xml = self.test_output / "feed.xml"
         content = feed_xml.read_text()
@@ -87,7 +91,7 @@ class TestRSSFeedGeneration(unittest.TestCase):
             },
         ]
 
-        generate_rss(posts, self.test_output)
+        generate_rss(self.dirs, posts, self.test_output)
 
         feed_xml = self.test_output / "feed.xml"
         content = feed_xml.read_text()
@@ -110,7 +114,7 @@ class TestRSSFeedGeneration(unittest.TestCase):
             for i in range(50)
         ]
 
-        generate_rss(posts, self.test_output)
+        generate_rss(self.dirs, posts, self.test_output)
 
         feed_xml = self.test_output / "feed.xml"
         content = feed_xml.read_text()
@@ -125,8 +129,9 @@ class TestRSSFeedDate(unittest.TestCase):
     def setUp(self):
         """Set up test output directory."""
         import tempfile
-
         self.test_output = Path(tempfile.mkdtemp())
+        init(self.test_output)
+        self.dirs = Dirs(Path(self.test_output))
 
     def tearDown(self):
         """Clean up test output directory."""
@@ -140,7 +145,7 @@ class TestRSSFeedDate(unittest.TestCase):
         posts = []
 
         with patch.object(config.rss, "timezone", "UTC"):
-            generate_rss(posts, self.test_output)
+            generate_rss(self.dirs, posts, self.test_output)
 
             feed_xml = self.test_output / "feed.xml"
             content = feed_xml.read_text()

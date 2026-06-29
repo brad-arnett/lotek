@@ -2,7 +2,6 @@ import sys
 
 from lotek.lib.frontmatter import parse_frontmatter
 from lotek.lib.colors import green, red
-from lotek.lib.dirs import dirs
 
 def _strip_datecode(stem):
     if (
@@ -14,7 +13,7 @@ def _strip_datecode(stem):
         return stem[11:]
     return stem
 
-def find_post(slug):
+def find_post(dirs, slug):
     posts_dir = dirs.CONTENT_POSTS
     if not posts_dir.exists():
         return None
@@ -36,8 +35,8 @@ def find_post(slug):
         sys.exit(2)
     return None
 
-def _set_publish(slug, value):
-    fp = find_post(slug)
+def _set_publish(dirs, slug, value):
+    fp = find_post(dirs, slug)
     if not fp:
         print(red(f"Not found: {slug}"))
         return 1
@@ -53,11 +52,11 @@ def _set_publish(slug, value):
     return 0
 
 
-def cmd_publish(slug):
+def cmd_publish(dirs, slug):
     """ i don't know if we even need these, really."""
-    return _set_publish(slug, "true")
+    return _set_publish(dirs, slug, "true")
 
 
-def cmd_unpublish(slug):
+def cmd_unpublish(dirs, slug):
     """ i don't know if we even need these, really."""
-    return _set_publish(slug, "false")
+    return _set_publish(dirs, slug, "false")

@@ -1,11 +1,10 @@
 """robots.txt and sitemap.xml generation"""
 
 from pathlib import Path
-from ..lib.site_config import config
-
 
 def sitemap_url(posts: list, output: Path):
     """ """
+    from lotek.lib.context import config
     sitemap_urls = [f"  <url><loc>{config.site.url}/</loc></url>"]
     for post in posts:
         sitemap_urls.append(
@@ -24,6 +23,7 @@ def generate_robots(posts: list, output: Path):
     """write a robots.txt file to the output directory
 
     also generates the sitemap.xml file since it's halfway related to robots"""
+    from lotek.lib.context import config
     (output / "robots.txt").write_text(
         f"User-agent: *\nAllow: /\nSitemap: {config.site.url}/sitemap.xml\n"
     )

@@ -4,15 +4,15 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 from lotek.lib.render import md_to_html, render, render_wrap
 from lotek.lib.frontmatter import parse_frontmatter
-from lotek.lib.site_config import config
-from lotek.lib.dirs import dirs
 
-def generate_posts(posts, out):
+
+def generate_posts(dirs, posts, out):
+    from lotek.lib.context import config
     posts_dir = out / "posts"
     posts_dir.mkdir(exist_ok=True)
     for post in posts:
-        html = md_to_html(post["body"])
-        content = render(
+        html = md_to_html(dirs, post["body"])
+        content = render(dirs,
             "post.html",
             {
                 "TITLE": post["title"],
@@ -21,7 +21,7 @@ def generate_posts(posts, out):
             },
         )
         post_url = f"{config.site.url}/posts/{post['slug']}.html"
-        page = render_wrap(
+        page = render_wrap(dirs,
             content,
             f"{post['title']} -- {config.site.title}",
             desc=post["desc"],
@@ -31,7 +31,10 @@ def generate_posts(posts, out):
         (posts_dir / f"{post['slug']}.html").write_text(page)
 
 
-def load_posts(posts_dir=dirs.CONTENT_POSTS):
+def load_posts(dirs, posts_dir=None):
+    from lotek.lib.context import config
+    if posts_dir is None:
+        posts_dir = dirs.CONTENT_POSTS
     posts = []
     if not posts_dir.exists():
         return posts

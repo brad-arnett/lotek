@@ -1,12 +1,30 @@
 """Test template rendering and markdown conversion."""
 
 import unittest
+import tempfile
+from pathlib import Path
+from lotek.lib.dirs import Dirs
 from lotek.lib.render import md_to_html, render, render_wrap
+from lotek.lib.init import init
 
+def get_temp_dir():
+    return Path(tempfile.mkdtemp())
 
 class TestTemplateRendering(unittest.TestCase):
+
+    def setUp(self):
+        self.test_output = get_temp_dir()
+        init(self.test_output)
+        self.dirs = Dirs(Path(self.test_output))
+
+    def tearDown(self):
+        import shutil
+        if self.test_output.exists():
+            shutil.rmtree(self.test_output)
+        self.dirs = None
+
     def test_template_substitution(self):
-        result = render(
+        result = render(self.dirs,
             "base.html",
             {
                 "SITE_TITLE": "Test Site",
@@ -24,10 +42,10 @@ class TestTemplateRendering(unittest.TestCase):
 
     def test_template_missing(self):
         with self.assertRaises(FileNotFoundError):
-            render("nonexistent.html", {})
+            render(self.dirs, "nonexistent.html", {})
 
     def test_template_without_replacements(self):
-        result = render(
+        result = render(self.dirs,
             "base.html",
             {
                 "SITE_TITLE": "value1",
@@ -37,7 +55,7 @@ class TestTemplateRendering(unittest.TestCase):
         self.assertIn("value1", result)
 
     def test_template_with_all_replacements(self):
-        result = render(
+        result = render(self.dirs,
             "base.html",
             {
                 "SITE_TITLE": "My Site",
@@ -57,9 +75,20 @@ class TestTemplateRendering(unittest.TestCase):
 
 
 class TestRenderWrap(unittest.TestCase):
+    def setUp(self):
+        self.test_output = get_temp_dir()
+        init(self.test_output)
+        self.dirs = Dirs(Path(self.test_output))
+
+    def tearDown(self):
+        import shutil
+        if self.test_output.exists():
+            shutil.rmtree(self.test_output)
+        self.dirs = None
+
     def test_wrap_basic(self):
         content = "<main>Content</main>"
-        result = render_wrap(
+        result = render_wrap(self.dirs,
             content, "Page Title", desc="Description", url="https://test.com"
         )
         self.assertIn("Page Title", result)
@@ -69,43 +98,53 @@ class TestRenderWrap(unittest.TestCase):
 
     def test_wrap_default_url(self):
         content = "<main>Content</main>"
-        result = render_wrap(content, "Page Title", desc="Description")
+        result = render_wrap(self.dirs, content, "Page Title", desc="Description")
         self.assertIn("https://lotek.run", result)
 
     def test_wrap_page_type(self):
         content = "<main>Content</main>"
-        article = render_wrap(content, "Article", desc="Desc", page_type="article")
+        article = render_wrap(self.dirs, content, "Article", desc="Desc", page_type="article")
         self.assertIn("article", article)
 
 
 class TestMarkdownToHtml(unittest.TestCase):
+    def setUp(self):
+        self.test_output = get_temp_dir()
+        init(self.test_output)
+        self.dirs = Dirs(Path(self.test_output))
+
+    def tearDown(self):
+        import shutil
+        if self.test_output.exists():
+            shutil.rmtree(self.test_output)
+        self.dirs = None
     def test_empty_text(self):
-        result = md_to_html("")
+        result = md_to_html(self.dirs, "")
         self.assertEqual(result.strip(), "")
 
     def test_just_text(self):
         text = "Plain text without markdown."
-        result = md_to_html(text)
+        result = md_to_html(self.dirs, text)
         self.assertIn("Plain text", result)
 
     def test_escaped_special_chars(self):
         text = "Text with & ampersand < and > symbols."
-        result = md_to_html(text)
+        result = md_to_html(self.dirs, text)
         self.assertIn("Text", result)
 
     def test_code_block_preserved(self):
         text = "Text\n```\ncode\n```\nmore text"
-        result = md_to_html(text)
+        result = md_to_html(self.dirs, text)
         self.assertIn("code", result)
 
     def test_code_block_highlighted(self):
         text = "```python\ncode\n```"
-        result = md_to_html(text)
+        result = md_to_html(self.dirs, text)
         self.assertIn('class="highlight"', result)
 
     def test_code_block_escaped(self):
         text = "```python\nprint('<script>')\n```"
-        result = md_to_html(text)
+        result = md_to_html(self.dirs, text)
         self.assertIn("&lt;script&gt;", result)
 
 

@@ -1,8 +1,7 @@
 from datetime import datetime
 from lotek.lib.colors import red, green
-from lotek.lib.dirs import dirs
 
-def cmd_add(title):
+def cmd_add(dirs, title):
     if not title:
         print(red("Title required"))
         return 1

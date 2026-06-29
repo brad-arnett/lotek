@@ -7,6 +7,7 @@
 robotstxt = true             # Enable/disable robots.txt generation
 rss = true                   # Enable/disable RSS feed generation
 skip_future = true           # Skip posts with future dates
+code_theme = "monokai"         # for code blocks
 
 # RSS feed settings
 [site.rss]

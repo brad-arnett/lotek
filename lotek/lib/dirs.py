@@ -6,6 +6,8 @@ class Dirs:
     def __init__(self, path=Path.cwd()):
         # pylint: disable=invalid-name
         self.CWD = path
+        self.LOTEK = self.CWD / ".lotek"
+
         self.CONTENT = self.CWD / "content"
         self.CONTENT_POSTS = self.CONTENT / "posts"
         self.CONTENT_PAGES = self.CONTENT / "pages"
@@ -22,5 +24,3 @@ class Dirs:
         self.PKG = _pkg_path = Path(__file__).parent.parent
         self.PKG_TEMPLATES = self.PKG / "templates"
         self.PKG_STATIC = self.PKG / "static"
-
-dirs = Dirs()

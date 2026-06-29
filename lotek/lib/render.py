@@ -2,8 +2,6 @@ import subprocess
 import shutil
 import sys
 
-from lotek.lib.dirs import dirs
-from lotek.lib.site_config import config
 from lotek.lib.highlight import process_code_blocks
 
 
@@ -11,8 +9,8 @@ def _has_pandoc():
     return shutil.which("pandoc") is not None
 
 
-def md_to_html(text):
-    text = process_code_blocks(text)
+def md_to_html(dirs, text):
+    text = process_code_blocks(dirs, text)
     if _has_pandoc():
         result = subprocess.run(
             ["pandoc", "-f", "markdown", "-t", "html", "--no-highlight"],
@@ -30,7 +28,7 @@ def md_to_html(text):
         return md.markdown(text, extensions=["extra", "smarty"])
 
 
-def render(template_name, replacements):
+def render(dirs, template_name, replacements):
     text = (dirs.TEMPLATES / template_name).read_text()
     for key, value in replacements.items():
         if value:
@@ -42,15 +40,17 @@ def render(template_name, replacements):
 
 
 def _nav_html():
+    from lotek.lib.context import config
     return "\n      ".join(
         f'<a href="{link.href}">{link.label}</a>' for link in config.nav
     )
 
 
-def render_wrap(content, title, desc=None, url=None, page_type="website"):
-    url = url or config.site.url
+def render_wrap(dirs, content, title, desc=None, url=None, page_type="website"):
     """convenience wrapper for rendering a page with the base template"""
-    return render(
+    from lotek.lib.context import config
+    url = url or config.site.url
+    return render(dirs,
         "base.html",
         {
             "TITLE": title,

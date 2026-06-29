@@ -1,9 +1,8 @@
 import subprocess
 import sys
 from lotek.lib.colors import green, red
-from lotek.lib.dirs import dirs
 
-def cmd_serve(port=8000):
+def cmd_serve(dirs, port=8000):
     output = dirs.OUTPUT
     if not output.exists():
         print(red("No output/ — run 'lotek build' first."))
