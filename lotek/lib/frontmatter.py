@@ -13,5 +13,5 @@ def parse_frontmatter(text):
     for line in text[4:end].splitlines():
         if ":" in line:
             k, _, v = line.partition(":")
-            meta[k.strip()] = v.strip()
+            meta[k.strip()] = v.strip().strip('"')
     return meta, text[end + 5 :]
