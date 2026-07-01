@@ -5,6 +5,7 @@ from datetime import date
 from pathlib import Path
 from lotek.lib.site_config import DEFAULT_CONFIG_TEMPLATE_PATH
 from lotek.lib.dirs import Dirs
+from lotek.lib.logger import log
 
 # Get the package root directory
 _pkg_path = Path(__file__).parent.parent
@@ -18,7 +19,7 @@ def init(site_path: Path) -> None:
     Args:
         site_path: Path to the site directory to initialize. Uses cwd if not provided.
     """
-    print(f"working path is: {site_path}")
+    log.info("working path is: %s", site_path)
 
     dirs: Dirs = Dirs(site_path)
     # Create directory structure
@@ -31,13 +32,13 @@ def init(site_path: Path) -> None:
     dirs.IMAGES.mkdir(parents=True, exist_ok=True)
     dirs.TEMPLATES.mkdir(exist_ok=True)
     # Copy templates
-    print("Copying templates...")
+    log.info("Copying templates...")
     for template in dirs.PKG_TEMPLATES.glob("*"):
         dst = dirs.TEMPLATES / template.name
         shutil.copy2(template, dst)
 
     # Copy static files
-    print("Populating static directory..")
+    log.info("Populating static directory..")
     static_src = dirs.PKG_STATIC
     for item in static_src.iterdir():
         if item.is_dir():
@@ -48,14 +49,14 @@ def init(site_path: Path) -> None:
     # Create site-config.toml from defaults
     config_path = site_path / "site-config.toml"
     if not config_path.exists():
-        print(f"Creating {config_path} from template...")
+        log.info("Creating %s from template...", config_path)
         config_path.write_text(DEFAULT_CONFIG_TEMPLATE_PATH.read_text())
-        print("✓ Site configuration created")
+        log.info("✓ Site configuration created")
 
     # Create an about page
     about_path = dirs.CONTENT_PAGES / "about.md"
     if not about_path.exists():
-        print(f"Creating {about_path} from template...")
+        log.info("Creating %s from template...", about_path)
         example_about = """---
 title: About
 date: 2026-06-15
@@ -74,7 +75,7 @@ The name comes from the Lo-Tek in William Gibson's Johnny Mnemonic -- an undergr
 Built with pandoc and a Python script. No npm. No framework. No build chain.
 """
         about_path.write_text(example_about)
-        print("✓ About page created")
+        log.info("✓ About page created")
 
     # Create an example post
     today = date.today().strftime("%Y-%m-%d")
@@ -99,10 +100,10 @@ This is your first post. Edit or delete this file to get started.
 5. Serve it with `lotek serve`
 """
         example_post.write_text(example_content)
-        print("✓ Example post created")
+        log.info("✓ Example post created")
 
-    print(f"\nSite initialized at: {dirs.CWD}")
-    print("Next steps:")
-    print("  - Edit content in content/posts/ and content/pages/")
-    print("  - Customize settings in site-config.toml")
-    print("  - Run 'lotek build' to generate the site")
+    log.info(f"\nSite initialized at: {dirs.CWD}")
+    log.info("Next steps:")
+    log.info("  - Edit content in content/posts/ and content/pages/")
+    log.info("  - Customize settings in site-config.toml")
+    log.info("  - Run 'lotek build' to generate the site")

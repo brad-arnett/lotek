@@ -1,8 +1,8 @@
-"""static page generator — builds content/pages/*.md to output/*.html"""
+"""builds content/pages/*.md to output/*.html"""
 
 from lotek.lib.render import render, render_wrap, md_to_html
 from lotek.lib.frontmatter import parse_frontmatter
-
+from lotek.lib.logger import log
 
 def generate_pages(dirs, out):
     from lotek.lib.context import config
@@ -12,9 +12,9 @@ def generate_pages(dirs, out):
     for path in sorted(pages_dir.glob("*.md")):
         meta, body = parse_frontmatter(path.read_text())
         if meta.get("publish", "").lower() == "false":
-            print(f"info: skipping page {path.stem} as it is not published")
+            log.info("skipping page %s as it is not published", path.stem)
             continue
-        print(f"info: generating page {path.stem}")
+        log.info("info: generating page %s", path.stem)
         slug = path.stem
         title = meta.get("title", slug)
         html = md_to_html(dirs, body)

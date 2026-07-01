@@ -1,9 +1,10 @@
 from datetime import datetime
+from lotek.lib.logger import log
 from lotek.lib.colors import red, green
 
 def cmd_add(dirs, title):
     if not title:
-        print(red("Title required"))
+        log.error(red("Title required"))
         return 1
     posts_dir = dirs.CONTENT_POSTS
     posts_dir.mkdir(parents=True, exist_ok=True)
@@ -12,13 +13,13 @@ def cmd_add(dirs, title):
     fname = f"{today}-{slug}.md"
     fp = posts_dir / fname
     if fp.exists():
-        print(red(f"Already exists: {fname}"))
+        log.warning("Already exists: %s", fname)
         return 1
     template_path = dirs.TEMPLATES / "post.md"
     if not template_path.exists():
-        print(red("Templates not found — run 'lotek init' first"))
+        log.error("%s doesn't exist, did you forget to run `lotek init` first?", template_path)
         return 1
     template = template_path.read_text()
     fp.write_text(template.replace("{title}", title).replace("{date}", today))
-    print(green(f"Created: content/posts/{fname}"))
+    log.info("Created: content/posts/%s", fname)
     return 0

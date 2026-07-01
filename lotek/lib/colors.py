@@ -14,5 +14,8 @@ def green(t):
 def red(t):
     return _color(t, "\033[31m")
 
+def yellow(t):
+    return _color(t, "\033[33m")
+
 def dim(t):
     return _color(t, "\033[2m")

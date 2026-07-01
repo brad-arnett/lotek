@@ -4,7 +4,7 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 from lotek.lib.render import md_to_html, render, render_wrap
 from lotek.lib.frontmatter import parse_frontmatter
-
+from lotek.lib.logger import log
 
 def generate_posts(dirs, posts, out):
     from lotek.lib.context import config
@@ -51,12 +51,13 @@ def load_posts(dirs, posts_dir=None):
                 pass
             # skip if publish is explicitly false
             if meta.get("publish", "").lower() == "false":
-                print(f"info: skipping post {path.stem} as it is not published")
+                log.info("skipping post %s as it is not published", path.stem)
                 continue
             # skip if undated or future
             if post_date is None or post_date > today:
-                print(
-                    f"info: skipping post {path.stem} as it is not published or future"
+                log.info(
+                    "info: skipping post %s as it is not published or future",
+                    path.stem
                 )
                 continue
             posts.append(

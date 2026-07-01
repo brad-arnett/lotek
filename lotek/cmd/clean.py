@@ -1,11 +1,11 @@
 
 import shutil
-from lotek.lib.colors import green
+from lotek.lib.logger import log
 
 def cmd_clean(dirs):
-
+    """Clean the output directory"""
     output = dirs.OUTPUT
     if output.exists():
         shutil.rmtree(output)
-        print(green("Removed output/"))
+        log.info("Removed output/")
     return 0

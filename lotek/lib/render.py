@@ -1,7 +1,7 @@
 import subprocess
 import shutil
 import sys
-
+from lotek.lib.logger import log
 from lotek.lib.highlight import process_code_blocks
 
 
@@ -19,7 +19,7 @@ def md_to_html(dirs, text):
             check=False,
         )
         if result.returncode != 0:
-            print(f"pandoc: {result.stderr.decode()}", file=sys.stderr)
+            log.error("pandoc: %s", result.stderr.decode())
             sys.exit(1)
         return result.stdout.decode()
     else:

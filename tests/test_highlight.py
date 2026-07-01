@@ -42,7 +42,6 @@ class TestProcessCodeBlocks(unittest.TestCase):
 
     def test_python_keywords_highlighted(self):
         result = process_code_blocks(dirs, "```python\ndef foo():\n    return None\n```")
-        # Pygments wraps keywords in spans — presence of any span confirms highlighting ran
         self.assertIn("<span", result)
 
     def test_produces_highlight_wrapper(self):

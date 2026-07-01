@@ -4,6 +4,7 @@ import os
 from pathlib import Path
 from types import SimpleNamespace
 from zoneinfo import ZoneInfo
+from lotek.lib.logger import log
 
 try:
     import tomllib
@@ -42,7 +43,7 @@ def load_config(config_path=None):
     if config_path is None:
         config_path = Path(os.getcwd()) / "site-config.toml"
     if not config_path.exists():
-        print(f"warn: config not found at {config_path}, creating from template...")
+        log.warning("config not found at %s, creating from template...", config_path)
         config_path.write_text(DEFAULT_CONFIG_TEMPLATE_PATH.read_text())
 
     defaults = _load_toml(DEFAULT_CONFIG_TEMPLATE_PATH).get("site", {})

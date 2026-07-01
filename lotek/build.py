@@ -9,6 +9,7 @@ from lotek.lib.pages import generate_pages
 from lotek.lib.posts import generate_posts, load_posts
 from lotek.lib.index import generate_index_landing
 from lotek.lib.static import wipe_and_copy_to_output_dir
+from lotek.lib.logger import log
 from lotek.plugins.rss import generate_rss
 from lotek.plugins.robots import generate_robots
 
@@ -17,7 +18,7 @@ def build(dirs):
     """main entry point"""
 
     out = dirs.OUTPUT
-    print(f"building lotek at {out}")
+    log.info("building lotek at %s", out)
     out.mkdir(exist_ok=True)
     dirs.OUTPUT_POSTS.mkdir(exist_ok=True)
     dirs.OUTPUT_STATIC.mkdir(exist_ok=True)
@@ -27,14 +28,14 @@ def build(dirs):
     generate_pages(dirs, out)
     from lotek.lib.context import config
     if config.features.robotstxt:
-        print("generating robots.txt...")
+        log.info("generating robots.txt...")
         generate_robots(posts, out)
     if config.features.rss:
-        print("generating RSS feed...")
+        log.info("generating RSS feed...")
         generate_rss(dirs, posts, out)
     generate_index_landing(dirs, posts, out)
     wipe_and_copy_to_output_dir(dirs, out)
 
-    print(f"built {len(posts)} posts -> output/")
+    log.info("built %s posts -> output/", len(posts))
     last_file = out / "_last"
     last_file.write_text(now_string())

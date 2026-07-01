@@ -1,9 +1,9 @@
 import subprocess
 
-from lotek.lib.colors import green, red
+from lotek.lib.logger import log
 from lotek.cmd.build import cmd_build
 
-def read_env():
+def read_env(dirs):
     env_path = dirs.CWD / ".env"
     if not env_path.exists():
         return {}
@@ -16,23 +16,23 @@ def read_env():
 
 
 def cmd_deploy(dirs, skip_build=False):
-    env = read_env()
+    env = read_env(dirs)
     user, host, path = (
         env.get("DEPLOY_USER"),
         env.get("DEPLOY_HOST"),
         env.get("DEPLOY_PATH"),
     )
     if not all([user, host, path]):
-        print(red("Missing DEPLOY_USER, DEPLOY_HOST, or DEPLOY_PATH in .env"))
+        log.error("Missing DEPLOY_USER, DEPLOY_HOST, or DEPLOY_PATH in .env")
         return 1
     if not skip_build:
-        print(green("Building..."))
-        rc = cmd_build()
+        log.info("Building...")
+        rc = cmd_build(dirs)
         if rc != 0:
             return rc
     dest = f"{user}@{host}:{path}/"
-    print(green(f"Deploying to {dest}"))
-    result = subprocess.run(
+    log.info("Deploying to %s", dest)
+    result = subprocess.run(s
         [
             "rsync",
             "-avz",
@@ -42,10 +42,11 @@ def cmd_deploy(dirs, skip_build=False):
             "--exclude=output",
             "output/",
             dest,
-        ]
+        ],
+        check=False
     )
     if result.returncode != 0:
-        print(red("Deploy failed"))
+        log.error("Deploy failed %s: %s", result.returncode, result.stderr.decode())
         return result.returncode
-    print(green("Deployed successfully"))
+    log.info("Deployed successfully")
     return 0

@@ -2,6 +2,7 @@ from datetime import datetime
 
 from lotek.lib.frontmatter import parse_frontmatter
 from lotek.lib.colors import green, BOLD, RESET
+from lotek.lib.logger import log
 
 def _table(headers, rows):
     widths = [len(h) for h in headers]
@@ -18,7 +19,7 @@ def cmd_list(dirs):
     from lotek.lib.context import config
     posts_dir = dirs.CONTENT_POSTS
     if not posts_dir.exists():
-        print("No posts directory found")
+        log.info("No posts directory found")
         return 0
     today = datetime.now().date()
     posts = []
@@ -27,7 +28,7 @@ def cmd_list(dirs):
         if meta.get("title"):
             posts.append((f, meta))
     if not posts:
-        print("No posts found")
+        log.info("No posts found")
         return 0
 
     def sort_key(item):
@@ -51,6 +52,6 @@ def cmd_list(dirs):
         else:
             state = "live"
         rows.append([date_str, meta.get("title", ""), f.stem, state])
-    print(green(f"{len(posts)} post(s)"))
+    log.info(f"{len(posts)} post(s)")
     _table(["date", "title", "slug", "status"], rows)
     return 0

@@ -8,7 +8,8 @@ import lotek
 from lotek.lib.dirs import Dirs
 from lotek.lib.site_config import load_config
 from lotek.lib.init import init
-from lotek.lib.context import update_config, update_pac
+from lotek.lib.context import update_config
+from lotek.lib.logger import log
 from lotek.cmd.add import cmd_add
 from lotek.cmd.build import cmd_build
 from lotek.cmd.clean import cmd_clean
@@ -96,7 +97,7 @@ def _main(args, wd):
         if args.command == "deploy":
             return cmd_deploy(dirs, skip_build=args.skip_build)
         if args.command == "list":
-            return cmd_list(dirs )
+            return cmd_list(dirs)
         if args.command == "add":
             return cmd_add(dirs, args.title)
         if args.command == "publish":
@@ -104,10 +105,10 @@ def _main(args, wd):
         if args.command == "unpublish":
             return cmd_unpublish(dirs, args.slug)
     except KeyboardInterrupt:
-        print("\nInterrupted")
+        log.error("\nInterrupted by user")
         return 1
     except Exception as e:
-        print(f"Error: {e}", file=sys.stderr)
+        log.error(f"Error: {e}", file=sys.stderr)
         return 1
 
 if __name__ == "__main__":
