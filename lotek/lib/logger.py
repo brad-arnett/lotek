@@ -8,7 +8,7 @@ from lotek.lib.colors import green, yellow, red, dim
 class LotekLogger(logging.Logger):
     """Custom logger that supports colored output to stdout"""
 
-    def __init__(self, name):
+    def __init__(self, name, level=logging.INFO):
         super().__init__(name)
 
         # Create stdout handler
@@ -17,61 +17,36 @@ class LotekLogger(logging.Logger):
             '%(levelname)s: %(message)s',
             datefmt='%H:%M:%S'
         ))
-
-        # Only add stdout handler if stdout is a TTY (has colors)
-        if self._should_use_colors():
-            self.addHandler(self._stdout_handler)
-            self.setLevel(logging.INFO)
-
-        # Set default color for each level
-        self._colors = {
-            'INFO': green,
-            'WARNING': yellow,
-            'ERROR': red,
-            'DEBUG': dim,
-            'CRITICAL': red,
-        }
+        self.set_level(level)
 
     def _should_use_colors(self):
         """Check if we should use colors (only when stdout is a TTY)"""
         return sys.stdout.isatty()
-    
-    def _colorize(self, level, message):
-        """Apply color to message based on level"""
-        if level in self._colors:
-            return self._colors[level](message)
-        return message
-    
+
     def info(self, message, *args, **kwargs):
         """Log at INFO level"""
         formatted_msg = message % args if args else message
-        message = self._colorize('INFO', formatted_msg)
-
-        self._log(logging.INFO, message, ())
+        self._log(logging.INFO, formatted_msg, ())
     
     def warning(self, message, *args, **kwargs):
         """Log at WARNING level"""
         formatted_msg = message % args if args else message
-        message = self._colorize('WARNING', formatted_msg)
-        self._log(logging.WARNING, message, ())
+        self._log(logging.WARNING, formatted_msg, ())
     
     def error(self, message, *args, **kwargs):
         """Log at ERROR level"""
         formatted_msg = message % args if args else message
-        message = self._colorize('ERROR', formatted_msg)
-        self._log(logging.ERROR, message, ())
+        self._log(logging.ERROR, formatted_msg, ())
     
     def debug(self, message, *args, **kwargs):
         """Log at DEBUG level (disabled by default)"""
         formatted_msg = message % args if args else message
-        message = self._colorize('DEBUG', formatted_msg)
-        self._log(logging.DEBUG, message, ())
+        self._log(logging.DEBUG, formatted_msg, ())
     
     def critical(self, message, *args, **kwargs):
         """Log at CRITICAL level"""
         formatted_msg = message % args if args else message
-        message = self._colorize('CRITICAL', formatted_msg)
-        self._log(logging.CRITICAL, message, ())
+        self._log(logging.CRITICAL, formatted_msg, ())
     
     def get_level(self):
         """Return current log level (useful for enabling debug)"""
