@@ -26,7 +26,6 @@ Build:
   lotek build             Build the site
   lotek clean             Remove build output
   lotek serve [--port N]  Serve output locally (default: 8000)
-  lotek deploy            Build and deploy via rsync (reads .env)
 
 Content:
   lotek init              Make a new site from scratch
@@ -94,8 +93,6 @@ def _main(args, wd):
             return cmd_clean(dirs)
         if args.command == "serve":
             return cmd_serve(dirs, args.port)
-        if args.command == "deploy":
-            return cmd_deploy(dirs, skip_build=args.skip_build)
         if args.command == "list":
             return cmd_list(dirs)
         if args.command == "add":
