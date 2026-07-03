@@ -37,3 +37,7 @@ href = "/about.html"
 [[site.nav]]
 label = "rss"
 href = "/feed.xml"
+
+# Lotek specific settings
+[site.lotek]
+log_level = "info"  # logging level (debug, info, warning, error, critical)

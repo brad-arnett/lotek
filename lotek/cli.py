@@ -71,8 +71,10 @@ def main():
     args = setup_cmd_parser()
     if args.command == "init" and args.path:
         wd = Path(args.path)
-    else:
-        wd = Path.cwd()
+        # init creates its own config, skip loading
+        _main(args, wd)
+        return
+    wd = Path.cwd()
     update_config(load_config(wd / "site-config.toml"))
     _main(args, wd)
 
