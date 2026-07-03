@@ -38,7 +38,7 @@ def find_post(dirs, slug):
 def _set_publish(dirs, slug, value):
     fp = find_post(dirs, slug)
     if not fp:
-        log.error(f"Not found: {slug}")
+        log.error("Not found: %s", slug)
         return 1
     meta, body = parse_frontmatter(fp.read_text())
     if not meta.get("title"):

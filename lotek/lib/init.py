@@ -102,7 +102,7 @@ This is your first post. Edit or delete this file to get started.
         example_post.write_text(example_content)
         log.info("✓ Example post created")
 
-    log.info(f"\nSite initialized at: {dirs.CWD}")
+    log.info("\nSite initialized at: %s", dirs.CWD)
     log.info("Next steps:")
     log.info("  - Edit content in content/posts/ and content/pages/")
     log.info("  - Customize settings in site-config.toml")

@@ -13,7 +13,6 @@ from lotek.lib.logger import log
 from lotek.cmd.add import cmd_add
 from lotek.cmd.build import cmd_build
 from lotek.cmd.clean import cmd_clean
-from lotek.cmd.deploy import cmd_deploy
 from lotek.cmd.list import cmd_list
 from lotek.cmd.publish import cmd_publish, cmd_unpublish
 from lotek.cmd.serve import cmd_serve
@@ -105,7 +104,7 @@ def _main(args, wd):
         log.error("\nInterrupted by user")
         return 1
     except Exception as e:
-        log.error(f"Error: {e}", file=sys.stderr)
+        log.error("Error: %s", e)
         return 1
 
 if __name__ == "__main__":

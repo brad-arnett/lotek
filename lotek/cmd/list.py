@@ -1,7 +1,6 @@
 from datetime import datetime
 
 from lotek.lib.frontmatter import parse_frontmatter
-from lotek.lib.colors import green, BOLD, RESET
 from lotek.lib.logger import log
 
 def _table(headers, rows):
@@ -10,7 +9,7 @@ def _table(headers, rows):
         for i, c in enumerate(row):
             widths[i] = max(widths[i], len(str(c)))
     hdr = "│ " + " │ ".join(h.center(w) for h, w in zip(headers, widths)) + " │"
-    print(BOLD + hdr + RESET)
+    print(hdr)
     print("-" * len(hdr))
     for row in rows:
         print("│ " + " │ ".join(str(c).ljust(w) for c, w in zip(row, widths)) + " │")
@@ -52,6 +51,6 @@ def cmd_list(dirs):
         else:
             state = "live"
         rows.append([date_str, meta.get("title", ""), f.stem, state])
-    log.info(f"{len(posts)} post(s)")
+    log.info("%s post(s)", len(posts))
     _table(["date", "title", "slug", "status"], rows)
     return 0

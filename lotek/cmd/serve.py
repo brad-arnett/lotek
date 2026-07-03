@@ -1,6 +1,5 @@
 import subprocess
 import sys
-from lotek.lib.colors import green, red
 from lotek.lib.logger import log
 
 def cmd_serve(dirs, port=8000):

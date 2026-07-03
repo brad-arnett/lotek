@@ -1,69 +1,61 @@
-"""Logger class for Lotek"""
+"""logger for lotek"""
+
 import logging
 import sys
-from logging import StreamHandler, Formatter
+from logging import INFO, WARNING, ERROR, DEBUG, CRITICAL
 
-from lotek.lib.colors import green, yellow, red, dim
 
 class LotekLogger(logging.Logger):
-    """Custom logger that supports colored output to stdout"""
+    """Custom logger that outputs to stderr with formatted level prefix."""
 
-    def __init__(self, name, level=logging.INFO):
+    def __init__(self, name):
         super().__init__(name)
+        self.setLevel(logging.INFO)
 
-        # Create stdout handler
-        self._stdout_handler = StreamHandler(stream=sys.stdout)
-        self._stdout_handler.setFormatter(Formatter(
-            '%(levelname)s: %(message)s',
-            datefmt='%H:%M:%S'
+        # Create stderr handler (logs should go to stderr)
+        self._stderr_handler = logging.StreamHandler(stream=sys.stderr)
+        self._stderr_handler.setFormatter(logging.Formatter(
+            '%(levelname)s: %(message)s'
         ))
-        self.set_level(level)
-
-    def _should_use_colors(self):
-        """Check if we should use colors (only when stdout is a TTY)"""
-        return sys.stdout.isatty()
+        self.addHandler(self._stderr_handler)
 
     def info(self, message, *args, **kwargs):
         """Log at INFO level"""
-        formatted_msg = message % args if args else message
-        self._log(logging.INFO, formatted_msg, ())
-    
+        self._log(INFO, message, args if args else (), **kwargs)
+
     def warning(self, message, *args, **kwargs):
         """Log at WARNING level"""
-        formatted_msg = message % args if args else message
-        self._log(logging.WARNING, formatted_msg, ())
-    
+        self._log(WARNING, message, args if args else (), **kwargs)
+
     def error(self, message, *args, **kwargs):
         """Log at ERROR level"""
-        formatted_msg = message % args if args else message
-        self._log(logging.ERROR, formatted_msg, ())
-    
+        self._log(ERROR, message, args if args else (), **kwargs)
+
     def debug(self, message, *args, **kwargs):
         """Log at DEBUG level (disabled by default)"""
-        formatted_msg = message % args if args else message
-        self._log(logging.DEBUG, formatted_msg, ())
-    
+        self._log(DEBUG, message, args if args else (), **kwargs)
+
     def critical(self, message, *args, **kwargs):
         """Log at CRITICAL level"""
-        formatted_msg = message % args if args else message
-        self._log(logging.CRITICAL, formatted_msg, ())
-    
+        self._log(CRITICAL, message, args if args else (), **kwargs)
+
     def get_level(self):
         """Return current log level (useful for enabling debug)"""
         return self.level
-    
+
     def set_level(self, level):
         """Set the log level (e.g., logging.DEBUG to enable debug)"""
         self.setLevel(level)
-    
+
     def remove_handler(self):
         """Remove the stdout handler (useful for adding file handlers)"""
-        if self._stdout_handler in self.handlers:
-            self.removeHandler(self._stdout_handler)
-    
+        if self._stderr_handler in self.handlers:
+            self.removeHandler(self._stderr_handler)
+
     def add_stdout_handler(self):
         """Add stdout handler back if removed"""
-        self.addHandler(self._stdout_handler)
+        self.addHandler(self._stderr_handler)
+
 
 # set up singleton logger
-log = LotekLogger("main")
+log = LotekLogger("lotek")

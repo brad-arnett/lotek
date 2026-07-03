@@ -1,10 +1,9 @@
 from datetime import datetime
 from lotek.lib.logger import log
-from lotek.lib.colors import red, green
 
 def cmd_add(dirs, title):
     if not title:
-        log.error(red("Title required"))
+        log.error("Title required")
         return 1
     posts_dir = dirs.CONTENT_POSTS
     posts_dir.mkdir(parents=True, exist_ok=True)
