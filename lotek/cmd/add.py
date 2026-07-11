@@ -1,6 +1,7 @@
 from datetime import datetime
 from lotek.lib.logger import log
 
+
 def cmd_add(dirs, title):
     if not title:
         log.error("Title required")
@@ -16,7 +17,9 @@ def cmd_add(dirs, title):
         return 1
     template_path = dirs.TEMPLATES / "post.md"
     if not template_path.exists():
-        log.error("%s doesn't exist, did you forget to run `lotek init` first?", template_path)
+        log.error(
+            "%s doesn't exist, did you forget to run `lotek init` first?", template_path
+        )
         return 1
     template = template_path.read_text()
     fp.write_text(template.replace("{title}", title).replace("{date}", today))

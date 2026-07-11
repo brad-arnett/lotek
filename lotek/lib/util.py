@@ -1,6 +1,7 @@
 import time
 from lotek.lib.logger import log
 
+
 def measure(func, *args, stage_name=None):
     """Measure execution time of a function call"""
     start = time.perf_counter()

@@ -37,6 +37,7 @@ def build(dirs, parallel=True):
         measure(generate_pages, dirs, out, stage_name="pages")
 
     from lotek.lib.context import config
+
     if config.features.robotstxt:
         log.info("generating robots.txt...")
         measure(generate_robots, posts, out, stage_name="robots.txt")

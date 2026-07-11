@@ -29,17 +29,25 @@ def _init_formatter(dirs, config):
     # theme has changed, update the last code theme
     last_code_file.write_text(style)
     # preserve any existing pygments.css
-    backup_filename = dirs.STATIC / f"pygments-backup-{date.today().strftime('%Y%m%d-%H%M%S')}.css"
+    backup_filename = (
+        dirs.STATIC / f"pygments-backup-{date.today().strftime('%Y%m%d-%H%M%S')}.css"
+    )
     shutil.move(dirs.STATIC / "pygments.css", backup_filename)
     log.info("backed up existing pygments.css to %s", backup_filename)
     # write out the new theme's css
-    (dirs.STATIC / "pygments.css").write_text(_formatter.get_style_defs('div.highlight'))
+    (dirs.STATIC / "pygments.css").write_text(
+        _formatter.get_style_defs("div.highlight")
+    )
+
 
 def process_code_blocks(dirs, text):
     from lotek.lib.context import config
+
     if not _formatter:
         from lotek.lib.context import config
+
         _init_formatter(dirs, config)
+
     def replace(m):
         lang = m.group(1).strip().lower() or "text"
         code = m.group(2)

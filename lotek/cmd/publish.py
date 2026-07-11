@@ -3,6 +3,7 @@ import sys
 from lotek.lib.frontmatter import parse_frontmatter
 from lotek.lib.logger import log
 
+
 def _strip_datecode(stem):
     if (
         len(stem) > 11
@@ -12,6 +13,7 @@ def _strip_datecode(stem):
     ):
         return stem[11:]
     return stem
+
 
 def find_post(dirs, slug):
     posts_dir = dirs.CONTENT_POSTS
@@ -35,6 +37,7 @@ def find_post(dirs, slug):
         sys.exit(2)
     return None
 
+
 def _set_publish(dirs, slug, value):
     fp = find_post(dirs, slug)
     if not fp:
@@ -48,15 +51,15 @@ def _set_publish(dirs, slug, value):
     fp.write_text(
         "---\n" + "".join(f"{k}: {v}\n" for k, v in meta.items()) + "---\n\n" + body
     )
-    log.info("%s: %s", str('Published' if value == 'true' else 'Unpublished'), slug)
+    log.info("%s: %s", str("Published" if value == "true" else "Unpublished"), slug)
     return 0
 
 
 def cmd_publish(dirs, slug):
-    """ i don't know if we even need these, really."""
+    """i don't know if we even need these, really."""
     return _set_publish(dirs, slug, "true")
 
 
 def cmd_unpublish(dirs, slug):
-    """ i don't know if we even need these, really."""
+    """i don't know if we even need these, really."""
     return _set_publish(dirs, slug, "false")

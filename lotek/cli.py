@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """lotek - operational command for lotek.run."""
+
 import sys
 import argparse
 import logging
@@ -34,6 +35,7 @@ Content:
   lotek unpublish <slug>  Mark a post as unpublished
 """
 
+
 def setup_cmd_parser():
     parser = argparse.ArgumentParser(prog="lotek")
     subs = parser.add_subparsers(dest="command")
@@ -42,7 +44,11 @@ def setup_cmd_parser():
     i.add_argument("path", type=str, default=".", nargs="?")
 
     p = subs.add_parser("build")
-    p.add_argument("--debug", action="store_true", help="Enable debug output including timing information")
+    p.add_argument(
+        "--debug",
+        action="store_true",
+        help="Enable debug output including timing information",
+    )
 
     subs.add_parser("clean")
 
@@ -51,7 +57,6 @@ def setup_cmd_parser():
 
     p = subs.add_parser("deploy")
     p.add_argument("--skip-build", action="store_true")
-
 
     subs.add_parser("list")
 
@@ -67,6 +72,7 @@ def setup_cmd_parser():
     args = parser.parse_args()
     return args
 
+
 def main():
     # load config
     args = setup_cmd_parser()
@@ -78,6 +84,7 @@ def main():
     wd = Path.cwd()
     update_config(load_config(wd / "site-config.toml"))
     _main(args, wd)
+
 
 def _main(args, wd):
     if not args.command:
@@ -92,6 +99,7 @@ def _main(args, wd):
         if args.command == "build":
             if args.debug:
                 from lotek.lib.logger import log
+
                 log.set_level(logging.DEBUG)
                 return cmd_build(dirs)
             return cmd_build(dirs)
@@ -113,6 +121,7 @@ def _main(args, wd):
     except Exception as e:
         log.error("Error: %s", e)
         return 1
+
 
 if __name__ == "__main__":
     main()

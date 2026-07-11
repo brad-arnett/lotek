@@ -3,6 +3,7 @@ from datetime import datetime
 from lotek.lib.frontmatter import parse_frontmatter
 from lotek.lib.logger import log
 
+
 def _table(headers, rows):
     widths = [len(h) for h in headers]
     for row in rows:
@@ -14,8 +15,10 @@ def _table(headers, rows):
     for row in rows:
         print("│ " + " │ ".join(str(c).ljust(w) for c, w in zip(row, widths)) + " │")
 
+
 def cmd_list(dirs):
     from lotek.lib.context import config
+
     posts_dir = dirs.CONTENT_POSTS
     if not posts_dir.exists():
         log.info("No posts directory found")

@@ -2,6 +2,7 @@ import subprocess
 import sys
 from lotek.lib.logger import log
 
+
 def cmd_serve(dirs, port=8000):
     output = dirs.OUTPUT
     if not output.exists():
@@ -11,7 +12,7 @@ def cmd_serve(dirs, port=8000):
     try:
         subprocess.run(
             [sys.executable, "-m", "http.server", str(port), "-d", str(output)],
-            check=False
+            check=False,
         )
     except KeyboardInterrupt:
         pass

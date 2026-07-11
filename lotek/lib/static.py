@@ -2,6 +2,7 @@
 
 import shutil
 
+
 def wipe_and_copy_to_output_dir(dirs, out):
     """clears out the output/static directory and copies the static/ back into it"""
     static_dst = out / "static"

@@ -17,7 +17,8 @@ def _render_single_post(args):
     dirs, post, posts_dir, config = args
     start = time.perf_counter()
     html = md_to_html(dirs, post["body"])
-    content = render(dirs,
+    content = render(
+        dirs,
         "post.html",
         {
             "TITLE": post["title"],
@@ -26,7 +27,8 @@ def _render_single_post(args):
         },
     )
     post_url = f"{config.site.url}/posts/{post['slug']}.html"
-    page = render_wrap(dirs,
+    page = render_wrap(
+        dirs,
         content,
         f"{post['title']} -- {config.site.title}",
         desc=post["desc"],
@@ -41,6 +43,7 @@ def _render_single_post(args):
 def _get_config():
     """Get global config from lotek.lib.context.config."""
     import lotek.lib.context
+
     return lotek.lib.context.config
 
 
@@ -61,12 +64,23 @@ def _render_batch(args, batch, posts_dir):
             try:
                 future.result()
             except Exception as e:
-                post = next((p for p in batch_posts if p["slug"] == future.get_args()[1]["slug"]), None)
-                log.warning("Failed to render %s: %s", post["title"] if post else "unknown", e)
+                post = next(
+                    (
+                        p
+                        for p in batch_posts
+                        if p["slug"] == future.get_args()[1]["slug"]
+                    ),
+                    None,
+                )
+                log.warning(
+                    "Failed to render %s: %s", post["title"] if post else "unknown", e
+                )
+
 
 def generate_posts_parallel(dirs, posts, out):
     """Render posts in parallel using concurrent execution."""
     from lotek.lib.context import config
+
     posts_dir = out / "posts"
     posts_dir.mkdir(exist_ok=True)
 
@@ -77,14 +91,13 @@ def generate_posts_parallel(dirs, posts, out):
     batch_size = DEFAULT_BATCH_SIZE
     batches = []
     for i in range(0, len(posts), batch_size):
-        batches.append(posts[i:i + batch_size])
+        batches.append(posts[i : i + batch_size])
 
     args = (dirs, config)
 
     with ThreadPoolExecutor(max_workers=len(batches)) as executor:
         futures = [
-            executor.submit(_render_batch, args, batch, posts_dir)
-            for batch in batches
+            executor.submit(_render_batch, args, batch, posts_dir) for batch in batches
         ]
         for future in as_completed(futures):
             try:
@@ -92,15 +105,18 @@ def generate_posts_parallel(dirs, posts, out):
             except Exception as e:
                 log.error("Failed to render batch: %s", e)
 
+
 def generate_posts(dirs, posts, out):
     """Render posts sequentially (legacy behavior)."""
     from lotek.lib.context import config
+
     posts_dir = out / "posts"
     posts_dir.mkdir(exist_ok=True)
     for i, post in enumerate(posts):
         start = time.perf_counter()
         html = md_to_html(dirs, post["body"])
-        content = render(dirs,
+        content = render(
+            dirs,
             "post.html",
             {
                 "TITLE": post["title"],
@@ -109,7 +125,8 @@ def generate_posts(dirs, posts, out):
             },
         )
         post_url = f"{config.site.url}/posts/{post['slug']}.html"
-        page = render_wrap(dirs,
+        page = render_wrap(
+            dirs,
             content,
             f"{post['title']} -- {config.site.title}",
             desc=post["desc"],
@@ -122,6 +139,7 @@ def generate_posts(dirs, posts, out):
 
 def load_posts(dirs, posts_dir=None):
     from lotek.lib.context import config
+
     if posts_dir is None:
         posts_dir = dirs.CONTENT_POSTS
     posts = []
@@ -145,8 +163,7 @@ def load_posts(dirs, posts_dir=None):
             # skip if undated or future
             if post_date is None or post_date > today:
                 log.info(
-                    "info: skipping post %s as it is not published or future",
-                    path.stem
+                    "info: skipping post %s as it is not published or future", path.stem
                 )
                 continue
             posts.append(

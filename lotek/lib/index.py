@@ -8,10 +8,13 @@ from lotek.lib.render import render, render_wrap
 def generate_index_landing(dirs, posts, out):
     """Generate the index landing page."""
     from lotek.lib.context import config
+
     items = ""
     for post in posts:
         items += html_stub_index(post)
-    content = render(dirs, "index.html", {"ITEMS": items, "DESC": config.site.description})
+    content = render(
+        dirs, "index.html", {"ITEMS": items, "DESC": config.site.description}
+    )
     (out / "index.html").write_text(
         render_wrap(dirs, content, config.site.title, url=config.site.url)
     )

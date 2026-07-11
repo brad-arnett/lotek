@@ -14,9 +14,9 @@ class LotekLogger(logging.Logger):
 
         # Create stderr handler (logs should go to stderr)
         self._stderr_handler = logging.StreamHandler(stream=sys.stderr)
-        self._stderr_handler.setFormatter(logging.Formatter(
-            '%(levelname)s: %(message)s'
-        ))
+        self._stderr_handler.setFormatter(
+            logging.Formatter("%(levelname)s: %(message)s")
+        )
         self.addHandler(self._stderr_handler)
 
     def info(self, message, *args, **kwargs):

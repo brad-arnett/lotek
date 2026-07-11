@@ -41,6 +41,7 @@ def render(dirs, template_name, replacements):
 
 def _nav_html():
     from lotek.lib.context import config
+
     return "\n      ".join(
         f'<a href="{link.href}">{link.label}</a>' for link in config.nav
     )
@@ -49,8 +50,10 @@ def _nav_html():
 def render_wrap(dirs, content, title, desc=None, url=None, page_type="website"):
     """convenience wrapper for rendering a page with the base template"""
     from lotek.lib.context import config
+
     url = url or config.site.url
-    return render(dirs,
+    return render(
+        dirs,
         "base.html",
         {
             "TITLE": title,

@@ -23,7 +23,8 @@ def _render_single_page(args):
     slug = path.stem
     title = meta.get("title", slug)
     html = md_to_html(dirs, body)
-    content = render(dirs,
+    content = render(
+        dirs,
         "post.html",
         {
             "TITLE": title,
@@ -31,7 +32,8 @@ def _render_single_page(args):
             "CONTENT": html,
         },
     )
-    page = render_wrap(dirs,
+    page = render_wrap(
+        dirs,
         content,
         f"{title} -- {config.site.title}",
         url=f"{config.site.url}/{slug}.html",
@@ -67,35 +69,33 @@ def _render_batch(args, batch_pages):
 def generate_pages_parallel(dirs, out):
     """Render pages in parallel using concurrent execution."""
     from lotek.lib.context import config
+
     pages_dir = dirs.CONTENT_PAGES
     if not pages_dir.exists():
         return
-    
+
     pages = sorted(pages_dir.glob("*.md"))
     if not pages:
         return
-    
+
     # Split pages into batches
     batch_size = DEFAULT_BATCH_SIZE
     batches = []
     for i in range(0, len(pages), batch_size):
-        batches.append(pages[i:i + batch_size])
-    
+        batches.append(pages[i : i + batch_size])
+
     args = (dirs, out, config)
-    
+
     all_results = []
     with ThreadPoolExecutor(max_workers=len(batches)) as executor:
-        futures = [
-            executor.submit(_render_batch, args, batch)
-            for batch in batches
-        ]
+        futures = [executor.submit(_render_batch, args, batch) for batch in batches]
         for future in as_completed(futures):
             try:
                 results = future.result()
                 all_results.extend(results)
             except Exception as e:
                 log.error("Failed to render batch: %s", e)
-    
+
     # Log timing for each page
     for result in all_results:
         log.debug("%.2fs - %s", result["elapsed"], result["title"])
@@ -104,6 +104,7 @@ def generate_pages_parallel(dirs, out):
 def generate_pages(dirs, out):
     """Render pages sequentially (legacy behavior)."""
     from lotek.lib.context import config
+
     pages_dir = dirs.CONTENT_PAGES
     if not pages_dir.exists():
         return
@@ -116,7 +117,8 @@ def generate_pages(dirs, out):
         slug = path.stem
         title = meta.get("title", slug)
         html = md_to_html(dirs, body)
-        content = render(dirs,
+        content = render(
+            dirs,
             "post.html",
             {
                 "TITLE": title,
@@ -125,7 +127,8 @@ def generate_pages(dirs, out):
             },
         )
         (out / f"{slug}.html").write_text(
-            render_wrap(dirs,
+            render_wrap(
+                dirs,
                 content,
                 f"{title} -- {config.site.title}",
                 url=f"{config.site.url}/{slug}.html",

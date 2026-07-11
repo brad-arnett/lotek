@@ -1,8 +1,11 @@
 """lotek directory structure"""
+
 from pathlib import Path
+
 
 class Dirs:
     """lotek directory structure"""
+
     def __init__(self, path=Path.cwd()):
         # pylint: disable=invalid-name
         self.CWD = path

@@ -1,6 +1,7 @@
 from lotek.lib.logger import log
 import lotek.build as build_module
 
+
 def cmd_build(dirs):
     try:
         build_module.build(dirs)
@@ -8,5 +9,6 @@ def cmd_build(dirs):
     except Exception as e:
         log.error("Build failed: %s", e)
         import traceback
+
         traceback.print_exc()
         return 1
