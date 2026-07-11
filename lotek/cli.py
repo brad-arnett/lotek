@@ -2,6 +2,7 @@
 """lotek - operational command for lotek.run."""
 import sys
 import argparse
+import logging
 from pathlib import Path
 import lotek
 
@@ -9,7 +10,6 @@ from lotek.lib.dirs import Dirs
 from lotek.lib.site_config import load_config
 from lotek.lib.init import init
 from lotek.lib.context import update_config
-from lotek.lib.logger import log
 from lotek.cmd.add import cmd_add
 from lotek.cmd.build import cmd_build
 from lotek.cmd.clean import cmd_clean
@@ -18,11 +18,11 @@ from lotek.cmd.publish import cmd_publish, cmd_unpublish
 from lotek.cmd.serve import cmd_serve
 
 USAGE = f"""
-lotek - Tiny Blog Management Tool
+lotek - a tiny static site generator
 ver: {getattr(lotek, "__version__", "unknown")}
 
 Build:
-  lotek build             Build the site
+  lotek build [--debug]   Build the site (with --debug show timing)
   lotek clean             Remove build output
   lotek serve [--port N]  Serve output locally (default: 8000)
 
@@ -41,7 +41,8 @@ def setup_cmd_parser():
     i = subs.add_parser("init")
     i.add_argument("path", type=str, default=".", nargs="?")
 
-    subs.add_parser("build")
+    p = subs.add_parser("build")
+    p.add_argument("--debug", action="store_true", help="Enable debug output including timing information")
 
     subs.add_parser("clean")
 
@@ -89,6 +90,10 @@ def _main(args, wd):
             # init is a special case and instantiates path based on an argument
             return init(Path.absolute(Path(args.path)))
         if args.command == "build":
+            if args.debug:
+                from lotek.lib.logger import log
+                log.set_level(logging.DEBUG)
+                return cmd_build(dirs)
             return cmd_build(dirs)
         if args.command == "clean":
             return cmd_clean(dirs)
