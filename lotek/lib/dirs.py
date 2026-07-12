@@ -10,6 +10,9 @@ class Dirs:
         # pylint: disable=invalid-name
         self.CWD = path
         self.LOTEK = self.CWD / ".lotek"
+        self.LOTEK_WARP = self.LOTEK / "warp"
+        self.LOTEK_WARP_PAGES = self.LOTEK_WARP / "pages"
+        self.LOTEK_WARP_POSTS = self.LOTEK_WARP / "posts"
 
         self.CONTENT = self.CWD / "content"
         self.CONTENT_POSTS = self.CONTENT / "posts"

@@ -5,6 +5,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from lotek.lib.render import render, render_wrap, md_to_html
 from lotek.lib.frontmatter import parse_frontmatter
 from lotek.lib.logger import log
+from lotek.lib.warp import warp_content
 
 # Default batch size for parallel processing
 DEFAULT_BATCH_SIZE = 10
@@ -77,6 +78,9 @@ def generate_pages_parallel(dirs, out):
     if not pages:
         return
 
+    if config.lotek.warp:
+        pages = warp_content(dirs, pages, "pages")
+
     # Split pages into batches
     batch_size = DEFAULT_BATCH_SIZE
     batches = []
@@ -86,15 +90,18 @@ def generate_pages_parallel(dirs, out):
     args = (dirs, out, config)
 
     all_results = []
-    with ThreadPoolExecutor(max_workers=len(batches)) as executor:
-        futures = [executor.submit(_render_batch, args, batch) for batch in batches]
-        for future in as_completed(futures):
-            try:
-                results = future.result()
-                all_results.extend(results)
-            except Exception as e:
-                log.error("Failed to render batch: %s", e)
-                log.exc(e)
+    if len(batches) > 0:
+        with ThreadPoolExecutor(max_workers=len(batches)) as executor:
+            futures = [executor.submit(_render_batch, args, batch) for batch in batches]
+            for future in as_completed(futures):
+                try:
+                    results = future.result()
+                    all_results.extend(results)
+                except Exception as e:
+                    log.error("Failed to render batch: %s", e)
+                    log.exc(e)
+    else:
+        log.warning("page batch size is zero, no work to do...")
 
 
 def generate_pages(dirs, out):

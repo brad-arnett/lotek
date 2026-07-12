@@ -12,6 +12,7 @@ from lotek.lib.util import measure
 from lotek.lib.index import generate_index_landing
 from lotek.lib.static import wipe_and_copy_to_output_dir
 from lotek.lib.logger import log
+from lotek.lib.warp import warp_content
 from lotek.plugins.rss import generate_rss
 from lotek.plugins.robots import generate_robots
 
@@ -27,6 +28,12 @@ def _build(dirs, parallel=True):
     dirs.OUTPUT_STATIC.mkdir(exist_ok=True)
     init_formatter(dirs, config)
     posts = load_posts(dirs)
+
+    # hash needs to happen after posts load so we don't accidentally hash an
+    # embargoed post without building it, leaving it unbuildable in the future
+    if config.lotek.warp:
+        log.info("warp speed engaged")
+        posts = warp_content(dirs, posts, "posts")
 
     # Use parallel version if enabled
     if parallel:
