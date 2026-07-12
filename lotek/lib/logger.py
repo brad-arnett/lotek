@@ -21,28 +21,34 @@ class LotekLogger(logging.Logger):
 
     def info(self, message, *args, **kwargs):
         """Log at INFO level"""
-        self._log(INFO, message, args if args else (), **kwargs)
+        if self.isEnabledFor(INFO):
+            self._log(INFO, message, args if args else (), **kwargs)
 
     def warning(self, message, *args, **kwargs):
         """Log at WARNING level"""
-        self._log(WARNING, message, args if args else (), **kwargs)
+        if self.isEnabledFor(WARNING):
+            self._log(WARNING, message, args if args else (), **kwargs)
 
     def error(self, message, *args, **kwargs):
         """Log at ERROR level"""
-        self._log(ERROR, message, args if args else (), **kwargs)
+        if self.isEnabledFor(ERROR):
+            self._log(ERROR, message, args if args else (), **kwargs)
 
     def debug(self, message, *args, **kwargs):
         """Log at DEBUG level (disabled by default)"""
-        self._log(DEBUG, message, args if args else (), **kwargs)
+        if self.isEnabledFor(DEBUG):
+            self._log(DEBUG, message, args if args else (), **kwargs)
 
     def critical(self, message, *args, **kwargs):
         """Log at CRITICAL level"""
-        self._log(CRITICAL, message, args if args else (), **kwargs)
+        if self.isEnabledFor(CRITICAL):
+            self._log(CRITICAL, message, args if args else (), **kwargs)
 
     def exc(self, e):
         """Log an exception"""
         from traceback import format_exc
-        self.debug(format_exc())
+        if self.isEnabledFor(DEBUG):
+            self.debug(format_exc())
 
     def get_level(self):
         """Return current log level (useful for enabling debug)"""
