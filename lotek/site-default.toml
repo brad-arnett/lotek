@@ -7,7 +7,7 @@
 robotstxt = true             # Enable/disable robots.txt generation
 rss = true                   # Enable/disable RSS feed generation
 skip_future = true           # Skip posts with future dates
-code_theme = "monokai"         # for code blocks
+code_theme = "monokai"       # for code blocks
 
 # RSS feed settings
 [site.rss]
@@ -41,3 +41,4 @@ href = "/feed.xml"
 # Lotek specific settings
 [site.lotek]
 log_level = "info"  # logging level (debug, info, warning, error, critical)
+warp = true         # differential build, set to false to rebuild entire site every time
