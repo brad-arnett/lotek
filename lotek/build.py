@@ -28,18 +28,20 @@ def _build(dirs, parallel=True):
     dirs.OUTPUT_STATIC.mkdir(exist_ok=True)
     init_formatter(dirs, config)
     posts = load_posts(dirs)
-
+    buildable = []
     # hash needs to happen after posts load so we don't accidentally hash an
     # embargoed post without building it, leaving it unbuildable in the future
     if config.lotek.warp:
-        log.info("warp speed engaged")
-        posts = warp_content(dirs, posts, "posts")
-
+        log.info("warp speed engaged, building dirty pages only")
+        buildable = warp_content(dirs, posts, "posts")
+    else:
+        buildable = posts
+    
     # Use parallel version if enabled
     if parallel:
-        measure(generate_posts_parallel, dirs, posts, out, stage_name="posts")
+        measure(generate_posts_parallel, dirs, buildable, out, stage_name="posts")
     else:
-        measure(generate_posts, dirs, posts, out, stage_name="posts")
+        measure(generate_posts, dirs, buildable, out, stage_name="posts")
 
     if parallel:
         measure(generate_pages_parallel, dirs, out, stage_name="pages")
