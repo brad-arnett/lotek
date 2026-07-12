@@ -11,7 +11,6 @@ from lotek.lib.logger import log
 # Default batch size for parallel processing
 DEFAULT_BATCH_SIZE = 10
 
-
 def _render_single_post(args):
     """Render a single post. Wrapper for ThreadPoolExecutor."""
     dirs, post, posts_dir, config = args
@@ -37,7 +36,8 @@ def _render_single_post(args):
     )
     (posts_dir / f"{post['slug']}.html").write_text(page)
     elapsed = time.perf_counter() - start
-    log.debug("%.2fs - %s", elapsed, post["title"])
+    short_title = post["title"] if len(post["title"]) < 20 else str.strip(post["title"][0:17]) + "..."
+    log.debug("%s done in %.2fs", short_title, elapsed)
 
 
 def _get_config():
@@ -134,7 +134,8 @@ def generate_posts(dirs, posts, out):
             page_type="article",
         )
         (posts_dir / f"{post['slug']}.html").write_text(page)
-        log.debug("%.2fs - %s", time.perf_counter() - start, post["title"])
+        short_title = post["title"] if len(post["title"]) < 20 else post["title"][0:17] + "..."
+        log.debug("%s done in %.2fs", short_title, time.perf_counter() - start)
 
 
 def load_posts(dirs, posts_dir=None):

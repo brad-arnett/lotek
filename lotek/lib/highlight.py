@@ -12,7 +12,6 @@ from lotek.lib.logger import log
 _FENCE = re.compile(r"^```(\w*)\n([\s\S]*?)^```[ \t]*$", re.MULTILINE)
 _formatter = None
 
-
 def _init_formatter(dirs, config):
     global _formatter
     style = config.features.code_theme
@@ -39,10 +38,7 @@ def _init_formatter(dirs, config):
         _formatter.get_style_defs("div.highlight")
     )
 
-
 def process_code_blocks(dirs, text):
-    from lotek.lib.context import config
-
     if not _formatter:
         from lotek.lib.context import config
 

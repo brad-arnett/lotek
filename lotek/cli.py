@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """lotek - operational command for lotek.run."""
 
-import sys
 import argparse
 import logging
 from pathlib import Path
@@ -85,7 +84,6 @@ def main():
     update_config(load_config(wd / "site-config.toml"))
     _main(args, wd)
 
-
 def _main(args, wd):
     if not args.command:
         print(USAGE)
@@ -99,7 +97,6 @@ def _main(args, wd):
         if args.command == "build":
             if args.debug:
                 from lotek.lib.logger import log
-
                 log.set_level(logging.DEBUG)
                 return cmd_build(dirs)
             return cmd_build(dirs)

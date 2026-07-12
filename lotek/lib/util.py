@@ -7,5 +7,5 @@ def measure(func, *args, stage_name=None):
     start = time.perf_counter()
     result = func(*args)
     elapsed = time.perf_counter() - start
-    log.debug("%.2fs - %s", elapsed, stage_name)
+    log.debug("%s done in %.2fs", stage_name, elapsed)
     return result

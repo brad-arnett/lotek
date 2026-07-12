@@ -14,8 +14,7 @@ from lotek.lib.logger import log
 from lotek.plugins.rss import generate_rss
 from lotek.plugins.robots import generate_robots
 
-
-def build(dirs, parallel=True):
+def _build(dirs, parallel=True):
     """main entry point"""
 
     out = dirs.OUTPUT
@@ -37,16 +36,18 @@ def build(dirs, parallel=True):
         measure(generate_pages, dirs, out, stage_name="pages")
 
     from lotek.lib.context import config
-
     if config.features.robotstxt:
         log.info("generating robots.txt...")
         measure(generate_robots, posts, out, stage_name="robots.txt")
     if config.features.rss:
         log.info("generating RSS feed...")
-        measure(generate_rss, dirs, posts, out, stage_name="RSS feed")
+        measure(generate_rss, dirs, posts, out, stage_name="rss")
     measure(generate_index_landing, dirs, posts, out, stage_name="index")
     measure(wipe_and_copy_to_output_dir, dirs, out, stage_name="static")
+    log.info("built %s posts", len(posts))
 
-    log.info("built %s posts -> output/", len(posts))
     last_file = out / "_last"
     last_file.write_text(now_string())
+
+def build(dirs, parallel=True):
+    measure(_build, dirs, parallel, stage_name="build")

@@ -40,7 +40,7 @@ def _render_single_page(args):
     )
     (out_dir / f"{slug}.html").write_text(page)
     elapsed = time.perf_counter() - start
-    log.debug("%.2fs - %s", elapsed, title)
+    log.debug("processed page: '%s' in %.2fs", title, elapsed)
     return {"slug": slug, "title": title, "elapsed": elapsed}
 
 
@@ -96,10 +96,6 @@ def generate_pages_parallel(dirs, out):
             except Exception as e:
                 log.error("Failed to render batch: %s", e)
 
-    # Log timing for each page
-    for result in all_results:
-        log.debug("%.2fs - %s", result["elapsed"], result["title"])
-
 
 def generate_pages(dirs, out):
     """Render pages sequentially (legacy behavior)."""
@@ -134,4 +130,4 @@ def generate_pages(dirs, out):
                 url=f"{config.site.url}/{slug}.html",
             )
         )
-        log.debug("%.2fs - %s", time.perf_counter() - start, title)
+        log.debug("processed page: '%s' in %.2fs", title, time.perf_counter() - start)

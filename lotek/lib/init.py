@@ -11,7 +11,7 @@ from lotek.lib.logger import log
 _pkg_path = Path(__file__).parent.parent
 
 
-def init(site_path: Path) -> None:
+def init(site_path: Path, layout: str="") -> None:
     """Initialize a new lotek site in the given directory.
 
     Creates the directory structure, copies templates, and generates site-config.toml.
