@@ -6,7 +6,7 @@ from pathlib import Path
 class Dirs:
     """lotek directory structure"""
 
-    def __init__(self, path=Path.cwd()):
+    def __init__(self, path=Path.cwd(), layout="default"):
         # pylint: disable=invalid-name
         self.CWD = path
         self.LOTEK = self.CWD / ".lotek"
@@ -28,5 +28,5 @@ class Dirs:
 
         # expected to be buried somewhere in site-packages
         self.PKG = _pkg_path = Path(__file__).parent.parent
-        self.PKG_TEMPLATES = self.PKG / "templates"
-        self.PKG_STATIC = self.PKG / "static"
+        self.PKG_TEMPLATES = self.PKG / "layouts" / layout / "templates"
+        self.PKG_STATIC = self.PKG / "layouts" / layout / "static"

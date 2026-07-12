@@ -1,0 +1,264 @@
+/* lotek.run -- as little as possible */
+
+:root {
+  --bg: #0d1117;
+  --fg: #c5cce8;
+  --dim: #546080;
+  --link: #7fa8d8;
+  --border: #1e2438;
+  --width: 68ch;
+  --font: 'Courier New', Courier, monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font);
+  line-height: 1.7;
+  max-width: var(--width);
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+a {
+  color: var(--link);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+header {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 1rem;
+  margin-bottom: 2rem;
+}
+
+.site-title {
+  font-weight: normal;
+  letter-spacing: 0.05em;
+}
+
+.site-title a {
+  color: var(--fg);
+}
+
+nav {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+}
+
+nav a {
+  color: var(--dim);
+  margin-right: 1.5rem;
+}
+
+nav a:hover {
+  color: var(--fg);
+  text-decoration: none;
+}
+
+h1, h2, h3 {
+  font-weight: normal;
+  font-size: 1rem;
+  letter-spacing: 0.03em;
+  margin-bottom: 0.25rem;
+}
+
+.meta {
+  color: var(--dim);
+  font-size: 0.85rem;
+  margin-bottom: 2rem;
+}
+
+article {
+  margin-top: 1rem;
+}
+
+article p {
+  margin-bottom: 1.1rem;
+}
+
+article h2 {
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+  color: var(--dim);
+}
+
+article blockquote {
+  border-left: 2px solid var(--dim);
+  padding-left: 1rem;
+  color: var(--dim);
+  margin: 1.5rem 0;
+}
+
+article pre {
+  border: 1px solid var(--border);
+  padding: 1rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+article code {
+  font-family: var(--font);
+  font-size: 0.9em;
+  color: var(--link);
+}
+
+article pre code {
+  color: var(--fg);
+}
+
+pre code .k { font-weight: bold; }
+pre code .s { color: var(--link); }
+pre code .c { color: var(--dim); font-style: italic; }
+
+hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 2rem 0;
+}
+
+.desc {
+  color: var(--dim);
+  font-size: 0.9rem;
+}
+
+.post-list {
+  list-style: none;
+  margin-top: 1rem;
+}
+
+.flex-apart {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.post-list li {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 0.8rem;
+  font-size: 0.95rem;
+  align-items: baseline;
+}
+
+.post-list .date {
+  color: var(--dim);
+  flex-shrink: 0;
+  font-size: 0.8rem;
+  width: 6rem;
+}
+
+.dim {
+  color: var(--dim);
+}
+
+/* --- landing page --------------------------------------------------------- */
+
+.lp-hero {
+  padding: 4rem 0 3rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 3rem;
+}
+
+.lp-title {
+  font-size: 2.5rem;
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+  margin-bottom: 0.75rem;
+}
+
+.lp-tagline {
+  color: var(--dim);
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.05em;
+}
+
+.lp-desc {
+  font-size: 0.95rem;
+  line-height: 1.8;
+  max-width: 52ch;
+}
+
+.lp-features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(17ch, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.lp-feature h3 {
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--link);
+  margin-bottom: 0.6rem;
+  font-weight: normal;
+}
+
+.lp-feature p {
+  font-size: 0.85rem;
+  line-height: 1.65;
+  color: var(--dim);
+}
+
+.lp-posts {
+  margin-bottom: 3rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.lp-section-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 1rem;
+}
+
+.lp-cta {
+  padding: 2rem 0 1rem;
+}
+
+.lp-subscribe {
+  display: block;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.02em;
+}
+
+.lp-cta-sub {
+  font-size: 0.8rem;
+  color: var(--dim);
+}
+
+/* --- end landing page ----------------------------------------------------- */
+
+footer {
+  margin-top: 4rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  color: var(--dim);
+  font-size: 0.8rem;
+}
+
+footer a {
+  color: var(--dim);
+}
+
+footer a:hover {
+  color: var(--fg);
+}
