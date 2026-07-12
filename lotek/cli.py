@@ -9,7 +9,7 @@ import lotek
 from lotek.lib.dirs import Dirs
 from lotek.lib.site_config import load_config
 from lotek.lib.init import init
-from lotek.lib.context import update_config
+from lotek.lib.context import update_config, config
 from lotek.cmd.add import cmd_add
 from lotek.cmd.build import cmd_build
 from lotek.cmd.clean import cmd_clean
@@ -49,6 +49,12 @@ def setup_cmd_parser():
         help="Enable debug output including timing information",
     )
 
+    p.add_argument(
+        "--force",
+        action="store_true",
+        help="build every post and page even if they haven't changed"
+    )
+
     subs.add_parser("clean")
 
     p = subs.add_parser("serve")
@@ -73,6 +79,7 @@ def setup_cmd_parser():
 
 
 def main():
+    global config
     # load config
     args = setup_cmd_parser()
     if args.command == "init" and args.path:
@@ -82,6 +89,7 @@ def main():
         return
     wd = Path.cwd()
     update_config(load_config(wd / "site-config.toml"))
+    config.lotek.warp = args.force
     _main(args, wd)
 
 def _main(args, wd):
