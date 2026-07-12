@@ -98,7 +98,6 @@ def _main(args, wd):
             if args.debug:
                 from lotek.lib.logger import log
                 log.set_level(logging.DEBUG)
-                return cmd_build(dirs)
             return cmd_build(dirs)
         if args.command == "clean":
             return cmd_clean(dirs)
@@ -116,7 +115,9 @@ def _main(args, wd):
         log.error("\nInterrupted by user")
         return 1
     except Exception as e:
+        from traceback import format_exc
         log.error("Error: %s", e)
+        log.error(format_exc())
         return 1
 
 

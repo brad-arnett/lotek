@@ -8,14 +8,18 @@ from pygments.formatters import HtmlFormatter
 from pygments.lexers import get_lexer_by_name
 from pygments.util import ClassNotFound
 from lotek.lib.logger import log
-
+from lotek.lib.context import update_formatter
 _FENCE = re.compile(r"^```(\w*)\n([\s\S]*?)^```[ \t]*$", re.MULTILINE)
-_formatter = None
 
-def _init_formatter(dirs, config):
-    global _formatter
+def init_formatter(dirs, config):
+    global highlight_formatter
+    from lotek.lib.context import highlight_formatter
+    if highlight_formatter is not None:
+        log.debug("highlight formatter already set")
+        return
     style = config.features.code_theme
-    _formatter = HtmlFormatter(classes=True, style=style)
+    update_formatter(HtmlFormatter(classes=True, style=style))
+    from lotek.lib.context import highlight_formatter as hf
     last_code_file = dirs.LOTEK / "last_code_theme"
     last_file = ""
     if last_code_file.exists():
@@ -35,14 +39,17 @@ def _init_formatter(dirs, config):
     log.info("backed up existing pygments.css to %s", backup_filename)
     # write out the new theme's css
     (dirs.STATIC / "pygments.css").write_text(
-        _formatter.get_style_defs("div.highlight")
+        hf.get_style_defs("div.highlight")
     )
 
 def process_code_blocks(dirs, text):
-    if not _formatter:
+    global highlight_formatter
+    from lotek.lib.context import highlight_formatter
+    if not highlight_formatter:
         from lotek.lib.context import config
-
-        _init_formatter(dirs, config)
+        init_formatter(dirs, config)
+        from lotek.lib.context import highlight_formatter as hf
+        highlight_formatter = hf
 
     def replace(m):
         lang = m.group(1).strip().lower() or "text"
@@ -53,6 +60,6 @@ def process_code_blocks(dirs, text):
             lexer = get_lexer_by_name(lang, stripall=False)
         except ClassNotFound:
             lexer = get_lexer_by_name("text")
-        return "\n\n" + highlight(code, lexer, _formatter) + "\n\n"
+        return "\n\n" + highlight(code, lexer, highlight_formatter) + "\n\n"
 
     return _FENCE.sub(replace, text)

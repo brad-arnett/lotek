@@ -5,7 +5,7 @@ from lotek.lib.logger import log
 
 config = None
 pac = None
-
+highlight_formatter = None
 
 def update_pac(new_pac=None):
     global pac  # pylint: disable=global-statement
@@ -25,3 +25,7 @@ def update_config(new_config):
         import logging
 
         log.setLevel(getattr(logging, log_level.upper(), logging.INFO))
+
+def update_formatter(formatter):
+    global highlight_formatter
+    highlight_formatter = formatter

@@ -68,7 +68,7 @@ def _render_batch(args, batch, posts_dir):
                     (
                         p
                         for p in batch_posts
-                        if p["slug"] == future.get_args()[1]["slug"]
+                        if p["slug"] == future.args[1]["slug"]
                     ),
                     None,
                 )
@@ -104,6 +104,7 @@ def generate_posts_parallel(dirs, posts, out):
                 future.result()
             except Exception as e:
                 log.error("Failed to render batch: %s", e)
+                log.exc(e)
 
 
 def generate_posts(dirs, posts, out):

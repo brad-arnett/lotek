@@ -5,7 +5,6 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from lotek.lib.render import render, render_wrap, md_to_html
 from lotek.lib.frontmatter import parse_frontmatter
 from lotek.lib.logger import log
-from lotek.lib.context import config
 
 # Default batch size for parallel processing
 DEFAULT_BATCH_SIZE = 10
@@ -95,6 +94,7 @@ def generate_pages_parallel(dirs, out):
                 all_results.extend(results)
             except Exception as e:
                 log.error("Failed to render batch: %s", e)
+                log.exc(e)
 
 
 def generate_pages(dirs, out):

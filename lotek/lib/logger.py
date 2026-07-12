@@ -39,6 +39,11 @@ class LotekLogger(logging.Logger):
         """Log at CRITICAL level"""
         self._log(CRITICAL, message, args if args else (), **kwargs)
 
+    def exc(self, e):
+        """Log an exception"""
+        from traceback import format_exc
+        self.debug(format_exc())
+
     def get_level(self):
         """Return current log level (useful for enabling debug)"""
         return self.level

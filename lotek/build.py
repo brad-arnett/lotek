@@ -5,6 +5,7 @@ Requires: pandoc in PATH or markdown module
 """
 
 from lotek.lib.site_time import now_string
+from lotek.lib.highlight import init_formatter
 from lotek.lib.pages import generate_pages, generate_pages_parallel
 from lotek.lib.posts import generate_posts, generate_posts_parallel, load_posts
 from lotek.lib.util import measure
@@ -16,12 +17,15 @@ from lotek.plugins.robots import generate_robots
 
 def _build(dirs, parallel=True):
     """main entry point"""
+    # runtime import to get the right context
+    from lotek.lib.context import config
 
     out = dirs.OUTPUT
     log.info("building lotek at %s", out)
     out.mkdir(exist_ok=True)
     dirs.OUTPUT_POSTS.mkdir(exist_ok=True)
     dirs.OUTPUT_STATIC.mkdir(exist_ok=True)
+    init_formatter(dirs, config)
     posts = load_posts(dirs)
 
     # Use parallel version if enabled
@@ -35,7 +39,6 @@ def _build(dirs, parallel=True):
     else:
         measure(generate_pages, dirs, out, stage_name="pages")
 
-    from lotek.lib.context import config
     if config.features.robotstxt:
         log.info("generating robots.txt...")
         measure(generate_robots, posts, out, stage_name="robots.txt")
