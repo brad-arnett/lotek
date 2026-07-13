@@ -10,10 +10,8 @@ def html_stub_index(post):
 """
 
 
-def html_stub_feed_items(post, html):
+def html_stub_feed_items(post, html, config):
     """Generate the HTML for a single post in the feed."""
-    from lotek.lib.context import config
-
     return f"""
     <item>
       <title>{post['title']}</title>

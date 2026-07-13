@@ -6,16 +6,19 @@ import logging
 from pathlib import Path
 import lotek
 
+from zoneinfo import ZoneInfo
+
 from lotek.lib.dirs import Dirs
 from lotek.lib.site_config import load_config
 from lotek.lib.init import init
-from lotek.lib.context import update_config, config
+from lotek.lib.site_config import load_config
 from lotek.cmd.add import cmd_add
 from lotek.cmd.build import cmd_build
 from lotek.cmd.clean import cmd_clean
 from lotek.cmd.list import cmd_list
 from lotek.cmd.publish import cmd_publish, cmd_unpublish
 from lotek.cmd.serve import cmd_serve
+
 
 USAGE = f"""
 lotek - a tiny static site generator
@@ -79,23 +82,21 @@ def setup_cmd_parser():
 
 
 def main():
-    global config
-    # load config
     args = setup_cmd_parser()
     if args.command == "init" and args.path:
         wd = Path(args.path)
         # init creates its own config, skip loading
-        _main(args, wd)
+        _main(args, wd, None)
         return
     wd = Path.cwd()
-    update_config(load_config(wd / "site-config.toml"))
-    config.lotek.warp = args.force
-    _main(args, wd)
-
-def _main(args, wd):
+    config = load_config(wd / "site-config.toml")
     if not args.command:
         print(USAGE)
         return 0
+    _main(args, wd, config)
+
+def _main(args, wd, config):
+
     # dirs derives from the current working directory (except init)
     dirs = Dirs(wd)
     try:
@@ -103,22 +104,26 @@ def _main(args, wd):
             # init is a special case and instantiates path based on an argument
             return init(Path.absolute(Path(args.path)))
         if args.command == "build":
+            if args.force:
+                print("setting force")
+                config.lotek.warp = False
             if args.debug:
                 from lotek.lib.logger import log
+                print("setting debug")
                 log.set_level(logging.DEBUG)
-            return cmd_build(dirs)
+            return cmd_build(dirs, config)
         if args.command == "clean":
-            return cmd_clean(dirs)
+            return cmd_clean(dirs, config)
         if args.command == "serve":
-            return cmd_serve(dirs, args.port)
+            return cmd_serve(dirs, config, args.port)
         if args.command == "list":
-            return cmd_list(dirs)
+            return cmd_list(dirs, config)
         if args.command == "add":
-            return cmd_add(dirs, args.title)
+            return cmd_add(dirs, config, args.title)
         if args.command == "publish":
-            return cmd_publish(dirs, args.slug)
+            return cmd_publish(dirs, config, args.slug)
         if args.command == "unpublish":
-            return cmd_unpublish(dirs, args.slug)
+            return cmd_unpublish(dirs, config, args.slug)
     except KeyboardInterrupt:
         log.error("\nInterrupted by user")
         return 1

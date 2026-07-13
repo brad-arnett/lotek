@@ -11,10 +11,8 @@ try:
 except ImportError:
     import tomli as tomllib
 
-
 ROOT = Path(__file__).parent.parent
 DEFAULT_CONFIG_TEMPLATE_PATH = ROOT / "site-default.toml"
-
 
 def _ns(d):
     if isinstance(d, dict):
@@ -23,11 +21,9 @@ def _ns(d):
         return [_ns(i) for i in d]
     return d
 
-
 def _load_toml(path: Path) -> dict:
     with open(path, "rb") as f:
         return tomllib.load(f)
-
 
 def _merge(base: dict, override: dict) -> dict:
     merged = dict(base)
@@ -37,7 +33,6 @@ def _merge(base: dict, override: dict) -> dict:
         else:
             merged[key] = val
     return merged
-
 
 def load_config(config_path=None):
     if config_path is None:

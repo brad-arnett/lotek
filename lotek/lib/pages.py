@@ -22,7 +22,7 @@ def _render_single_page(args):
     start = time.perf_counter()
     slug = path.stem
     title = meta.get("title", slug)
-    html = md_to_html(dirs, body)
+    html = md_to_html(dirs, body, config)
     content = render(
         dirs,
         "post.html",
@@ -34,6 +34,7 @@ def _render_single_page(args):
     )
     page = render_wrap(
         dirs,
+        config,
         content,
         f"{title} -- {config.site.title}",
         url=f"{config.site.url}/{slug}.html",
@@ -66,10 +67,8 @@ def _render_batch(args, batch_pages):
     return results
 
 
-def generate_pages_parallel(dirs, out):
+def generate_pages_parallel(dirs, config, out):
     """Render pages in parallel using concurrent execution."""
-    from lotek.lib.context import config
-
     pages_dir = dirs.CONTENT_PAGES
     if not pages_dir.exists():
         return
@@ -104,10 +103,8 @@ def generate_pages_parallel(dirs, out):
         log.warning("page batch size is zero, no work to do...")
 
 
-def generate_pages(dirs, out):
+def generate_pages(dirs, config, out):
     """Render pages sequentially (legacy behavior)."""
-    from lotek.lib.context import config
-
     pages_dir = dirs.CONTENT_PAGES
     if not pages_dir.exists():
         return
@@ -119,7 +116,7 @@ def generate_pages(dirs, out):
         start = time.perf_counter()
         slug = path.stem
         title = meta.get("title", slug)
-        html = md_to_html(dirs, body)
+        html = md_to_html(dirs, body, config)
         content = render(
             dirs,
             "post.html",
@@ -132,6 +129,7 @@ def generate_pages(dirs, out):
         (out / f"{slug}.html").write_text(
             render_wrap(
                 dirs,
+                config,
                 content,
                 f"{title} -- {config.site.title}",
                 url=f"{config.site.url}/{slug}.html",

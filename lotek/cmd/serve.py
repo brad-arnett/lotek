@@ -3,7 +3,7 @@ import sys
 from lotek.lib.logger import log
 
 
-def cmd_serve(dirs, port=8000):
+def cmd_serve(dirs, _config, port=8000):
     output = dirs.OUTPUT
     if not output.exists():
         log.error("no output/ directory exists to serve.  Did you run `lotek build`?")

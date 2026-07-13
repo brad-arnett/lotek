@@ -7,18 +7,16 @@ import tempfile
 from lotek.lib.dirs import Dirs
 from lotek.lib.warp import Warp, warp_content
 from lotek.lib.site_config import load_config
-import lotek.lib.context as ctx_module
 
 
 def get_test_dirs(tmpdir):
     """Create test Dirs object with proper config."""
     cfg = load_config(Path(tmpdir) / "site-config.toml")
-    cfg.site.url = "https://lotek.run"
+    cfg.site.url = "http://localhost:8000"
     cfg.site.title = "lotek.run"
     cfg.site.description = "test"
 
     dirs = Dirs(Path(tmpdir))
-    ctx_module.config = cfg
     return dirs
 
 

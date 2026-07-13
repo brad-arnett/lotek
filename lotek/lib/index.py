@@ -5,9 +5,8 @@ from lotek.lib.html_stubs import html_stub_index
 from lotek.lib.render import render, render_wrap
 
 
-def generate_index_landing(dirs, posts, out):
+def generate_index_landing(dirs, config, posts, out):
     """Generate the index landing page."""
-    from lotek.lib.context import config
 
     items = ""
     for post in posts:
@@ -16,8 +15,8 @@ def generate_index_landing(dirs, posts, out):
         dirs, "index.html", {"ITEMS": items, "DESC": config.site.description}
     )
     (out / "index.html").write_text(
-        render_wrap(dirs, content, config.site.title, url=config.site.url)
+        render_wrap(dirs, config, content, config.site.title, url=config.site.url)
     )
 
     last_file = out / "_last"
-    last_file.write_text(now_string())
+    last_file.write_text(now_string(config))

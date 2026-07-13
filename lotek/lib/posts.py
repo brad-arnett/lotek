@@ -15,7 +15,7 @@ def _render_single_post(args):
     """Render a single post. Wrapper for ThreadPoolExecutor."""
     dirs, post, posts_dir, config = args
     start = time.perf_counter()
-    html = md_to_html(dirs, post["body"])
+    html = md_to_html(dirs, post["body"], config)
     content = render(
         dirs,
         "post.html",
@@ -28,6 +28,7 @@ def _render_single_post(args):
     post_url = f"{config.site.url}/posts/{post['slug']}.html"
     page = render_wrap(
         dirs,
+        config,
         content,
         f"{post['title']} -- {config.site.title}",
         desc=post["desc"],
@@ -36,21 +37,12 @@ def _render_single_post(args):
     )
     (posts_dir / f"{post['slug']}.html").write_text(page)
     elapsed = time.perf_counter() - start
-    short_title = post["title"] if len(post["title"]) < 20 else str.strip(post["title"][0:17]) + "..."
+    short_title = post["title"] if len(post["title"]) < 20 else post["title"][0:17] + "..."
     log.debug("%s done in %.2fs", short_title, elapsed)
-
-
-def _get_config():
-    """Get global config from lotek.lib.context.config."""
-    import lotek.lib.context
-
-    return lotek.lib.context.config
-
 
 def _render_batch(args, batch, posts_dir):
     """Render a batch of posts concurrently."""
     dirs, config = args
-    config = _get_config()
     batch_posts = list(batch)
     with ThreadPoolExecutor(max_workers=len(batch_posts)) as executor:
         futures = [
@@ -64,22 +56,11 @@ def _render_batch(args, batch, posts_dir):
             try:
                 future.result()
             except Exception as e:
-                post = next(
-                    (
-                        p
-                        for p in batch_posts
-                        if p["slug"] == future.args[1]["slug"]
-                    ),
-                    None,
-                )
-                log.warning(
-                    "Failed to render %s: %s", post["title"] if post else "unknown", e
-                )
+                log.warning("Failed to render post: %s", e)
 
 
-def generate_posts_parallel(dirs, posts, out):
+def generate_posts_parallel(dirs, config, posts, out):
     """Render posts in parallel using concurrent execution."""
-    from lotek.lib.context import config
 
     posts_dir = out / "posts"
     posts_dir.mkdir(exist_ok=True)
@@ -107,15 +88,14 @@ def generate_posts_parallel(dirs, posts, out):
                 log.exc(e)
 
 
-def generate_posts(dirs, posts, out):
+def generate_posts(dirs, config, posts, out):
     """Render posts sequentially (legacy behavior)."""
-    from lotek.lib.context import config
 
     posts_dir = out / "posts"
     posts_dir.mkdir(exist_ok=True)
     for i, post in enumerate(posts):
         start = time.perf_counter()
-        html = md_to_html(dirs, post["body"])
+        html = md_to_html(dirs, post["body"], config)
         content = render(
             dirs,
             "post.html",
@@ -128,6 +108,7 @@ def generate_posts(dirs, posts, out):
         post_url = f"{config.site.url}/posts/{post['slug']}.html"
         page = render_wrap(
             dirs,
+            config,
             content,
             f"{post['title']} -- {config.site.title}",
             desc=post["desc"],
@@ -139,9 +120,7 @@ def generate_posts(dirs, posts, out):
         log.debug("%s done in %.2fs", short_title, time.perf_counter() - start)
 
 
-def load_posts(dirs, posts_dir=None):
-    from lotek.lib.context import config
-
+def load_posts(dirs, config, posts_dir=None):
     if posts_dir is None:
         posts_dir = dirs.CONTENT_POSTS
     posts = []

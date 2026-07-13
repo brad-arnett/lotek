@@ -8,6 +8,7 @@ from unittest.mock import patch
 
 from lotek.lib.init import init
 from lotek.lib.dirs import Dirs
+from lotek.lib.site_config import load_config
 from lotek.build import (
     load_posts,
     generate_posts,
@@ -25,11 +26,13 @@ class TestLoadPosts(unittest.TestCase):
         self.temp_dir = get_temp_dir()
         init(self.temp_dir)
         self.dirs = Dirs(self.temp_dir)
+        self.config = load_config(self.temp_dir / "site-config.toml")
 
     def tearDown(self):
         shutil.rmtree(self.temp_dir)
         self.temp_dir = None
         self.dirs = None
+        self.config = None
 
     def test_load_posts_with_post(self):
         posts_dir = self.dirs.CONTENT_POSTS
@@ -43,7 +46,7 @@ class TestLoadPosts(unittest.TestCase):
                     {"title": "Test Post", "date": "2026-06-15", "desc": "Test description"},
                     "Test body",
                 )
-                posts = load_posts(self.dirs, posts_dir)
+                posts = load_posts(self.dirs, self.config, posts_dir)
                 self.assertEqual(len(posts), 2)
                 self.assertEqual(posts[0]["title"], "Test Post")
                 self.assertEqual(posts[0]["slug"], "test-post")
@@ -55,7 +58,7 @@ class TestLoadPosts(unittest.TestCase):
         posts_dir = self.dirs.CONTENT_POSTS
         #posts_dir.mkdir(parents=True)
         try:
-            posts = load_posts(self.dirs, posts_dir)
+            posts = load_posts(self.dirs, self.config, posts_dir)
             # init() creates an example post, so expect one post
             self.assertEqual(len(posts), 1)
             self.assertEqual(posts[0]["title"], "Welcome to Lotek")
@@ -63,7 +66,11 @@ class TestLoadPosts(unittest.TestCase):
             shutil.rmtree(posts_dir.parent)
 
     def test_load_posts_no_directory(self):
-        posts = load_posts(Dirs(Path("/tmp/nonexistent-lotek-posts-dir")))
+        mock_config = load_config(Path("/tmp/mock-config"))
+        mock_config.features = type('obj', (object,), {'skip_future': False})()
+        mock_config.rss = type('obj', (object,), {'timezone': 'UTC'})()
+        mock_config.date_format = type('obj', (object,), {'format': '%Y-%m-%d %H:%M:%SZ'})()
+        posts = load_posts(Dirs(Path("/tmp/nonexistent-lotek-posts-dir")), mock_config)
         self.assertEqual(posts, [])
 
     def test_load_posts_publish_false_skipped(self):
@@ -77,7 +84,7 @@ class TestLoadPosts(unittest.TestCase):
                 "lotek.lib.posts.parse_frontmatter",
                 return_value=({"title": "Hidden Post", "date": "2026-06-15", "publish": "false"}, "Hidden body"),
             ):
-                posts = load_posts(self.dirs, posts_dir)
+                posts = load_posts(self.dirs, self.config, posts_dir)
                 self.assertEqual(len(posts), 0)
         finally:
             shutil.rmtree(posts_dir.parent)
@@ -92,7 +99,7 @@ class TestLoadPosts(unittest.TestCase):
                 "lotek.lib.posts.parse_frontmatter",
                 return_value=({"title": "Published Post", "date": "2026-06-15", "publish": "true"}, "Published body"),
             ):
-                posts = load_posts(self.dirs, posts_dir)
+                posts = load_posts(self.dirs, self.config, posts_dir)
                 self.assertEqual(len(posts), 2)
                 self.assertEqual(posts[0]["title"], "Published Post")
         finally:
@@ -109,7 +116,7 @@ class TestLoadPosts(unittest.TestCase):
                 "lotek.lib.posts.parse_frontmatter",
                 return_value=({"title": "Default Post", "date": "2026-06-15"}, "Default body"),
             ):
-                posts = load_posts(self.dirs, posts_dir)
+                posts = load_posts(self.dirs, self.config, posts_dir)
                 self.assertEqual(len(posts), 2) # +1 because init creates a welcome post
                 self.assertEqual(posts[0]["title"], "Default Post")
         finally:
@@ -132,7 +139,7 @@ class TestLoadPosts(unittest.TestCase):
 
         try:
             with patch("lotek.lib.posts.parse_frontmatter", side_effect=mock_pm_side_effect):
-                posts = load_posts(self.dirs, posts_dir)
+                posts = load_posts(self.dirs, self.config, posts_dir)
                 self.assertEqual(len(posts), 3) # +1 because init creates a welcome post
                 titles = [p["title"] for p in posts]
                 self.assertIn("Published Post", titles)
@@ -147,25 +154,27 @@ class TestGeneratePosts(unittest.TestCase):
         self.test_output = get_temp_dir()
         init(self.test_output)
         self.dirs = Dirs(self.test_output)
+        self.config = load_config(self.test_output / "site-config.toml")
 
     def tearDown(self):
         shutil.rmtree(self.test_output)
         self.test_output = None
         self.dirs = None
+        self.config = None
 
     def test_generate_posts_creates_directory(self):
         posts = [{"title": "Test", "slug": "test", "date": "2026-06-15", "desc": "Desc", "body": "Body"}]
-        generate_posts(self.dirs, posts, self.test_output)
+        generate_posts(self.dirs, self.config, posts, self.test_output)
         self.assertTrue((self.test_output / "posts").exists())
 
     def test_generate_posts_creates_html(self):
         posts = [{"title": "Test Post", "slug": "test", "date": "2026-06-15", "desc": "Desc", "body": "Body"}]
-        generate_posts(self.dirs, posts, self.test_output)
+        generate_posts(self.dirs, self.config, posts, self.test_output)
         self.assertTrue((self.test_output / "posts" / "test.html").exists())
 
     def test_generate_posts_content(self):
         posts = [{"title": "Test Title", "slug": "test", "date": "2026-06-15", "desc": "Desc", "body": "<p>Test body</p>"}]
-        generate_posts(self.dirs, posts, self.test_output)
+        generate_posts(self.dirs, self.config, posts, self.test_output)
         content = (self.test_output / "posts" / "test.html").read_text()
         self.assertIn("Test Title", content)
         self.assertIn("Test body", content)
@@ -206,17 +215,18 @@ class TestGenerateIndexLanding(unittest.TestCase):
         self.test_output = get_temp_dir()
         init(self.test_output)
         self.dirs = Dirs(Path(self.test_output))
+        self.config = load_config(self.test_output / "site-config.toml")
 
     def tearDown(self):
         shutil.rmtree(self.test_output)
 
     def test_generate_index_creates_index(self):
-        generate_index_landing(self.dirs, [], self.test_output)
+        generate_index_landing(self.dirs, self.config, [], self.test_output)
         self.assertTrue((self.test_output / "index.html").exists())
 
     def test_generate_index_with_posts(self):
         posts = [{"date": "2026-06-15", "slug": "hello", "title": "Hello"}]
-        generate_index_landing(self.dirs, posts, self.test_output)
+        generate_index_landing(self.dirs, self.config, posts, self.test_output)
         content = (self.test_output / "index.html").read_text()
         self.assertIn("Hello", content)
 
@@ -226,11 +236,13 @@ class TestFullBuild(unittest.TestCase):
         self.test_output = get_temp_dir()
         init(self.test_output)
         self.dirs = Dirs(self.test_output)
+        self.config = load_config(self.test_output / "site-config.toml")
 
     def tearDown(self):
         shutil.rmtree(self.test_output)
         self.test_output = None
         self.dirs = None
+        self.config = None
 
     @patch("lotek.build.wipe_and_copy_to_output_dir")
     @patch("lotek.build.generate_posts")
@@ -242,7 +254,7 @@ class TestFullBuild(unittest.TestCase):
         self, mock_load, mock_gen_idx, mock_rss, mock_robots, mock_posts, mock_wipe
     ):
         mock_load.return_value = []
-        build(self.dirs)
+        build(self.dirs, self.config)
         mock_load.assert_called_once()
         mock_gen_idx.assert_called_once()
         mock_rss.assert_called_once()

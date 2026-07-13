@@ -17,8 +17,8 @@ timezone = "America/Los_Angeles"  # Timezone for RSS dates
 # Site metadata
 [site.site]
 title = "lotek site generator"    # Site title
-url = "https://localhost:8000"    # Site URL
-description = "a tiny static blog generator"  # Site description
+url = "http://localhost:8000"    # Site URL
+description = "a tiny static site generator"  # Site description
 extra_css = ""                  # Extra CSS append
 
 # Date format (ISO 8601)

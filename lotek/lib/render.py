@@ -9,8 +9,8 @@ def _has_pandoc():
     return shutil.which("pandoc") is not None
 
 
-def md_to_html(dirs, text):
-    text = process_code_blocks(dirs, text)
+def md_to_html(dirs, text, config):
+    text = process_code_blocks(dirs, config, text)
     if _has_pandoc():
         result = subprocess.run(
             ["pandoc", "-f", "markdown", "-t", "html", "--no-highlight"],
@@ -39,17 +39,15 @@ def render(dirs, template_name, replacements):
     return text
 
 
-def _nav_html():
-    from lotek.lib.context import config
+def _nav_html(config):
 
     return "\n      ".join(
         f'<a href="{link.href}">{link.label}</a>' for link in config.nav
     )
 
 
-def render_wrap(dirs, content, title, desc=None, url=None, page_type="website"):
+def render_wrap(dirs, config, content, title, desc=None, url=None, page_type="website"):
     """convenience wrapper for rendering a page with the base template"""
-    from lotek.lib.context import config
 
     url = url or config.site.url
     return render(
@@ -63,6 +61,6 @@ def render_wrap(dirs, content, title, desc=None, url=None, page_type="website"):
             "META_DESC": desc or config.site.description,
             "META_URL": url or config.site.url,
             "META_TYPE": page_type,
-            "NAV": _nav_html(),
+            "NAV": _nav_html(config),
         },
     )

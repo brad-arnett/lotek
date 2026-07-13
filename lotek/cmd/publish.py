@@ -38,7 +38,7 @@ def find_post(dirs, slug):
     return None
 
 
-def _set_publish(dirs, slug, value):
+def _set_publish(dirs, _config, slug, value):
     fp = find_post(dirs, slug)
     if not fp:
         log.error("Not found: %s", slug)
@@ -55,11 +55,11 @@ def _set_publish(dirs, slug, value):
     return 0
 
 
-def cmd_publish(dirs, slug):
+def cmd_publish(dirs, config, slug):
     """i don't know if we even need these, really."""
-    return _set_publish(dirs, slug, "true")
+    return _set_publish(dirs, config, slug, "true")
 
 
-def cmd_unpublish(dirs, slug):
+def cmd_unpublish(dirs, config, slug):
     """i don't know if we even need these, really."""
-    return _set_publish(dirs, slug, "false")
+    return _set_publish(dirs, config, slug, "false")

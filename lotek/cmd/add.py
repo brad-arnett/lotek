@@ -2,7 +2,7 @@ from datetime import datetime
 from lotek.lib.logger import log
 
 
-def cmd_add(dirs, title):
+def cmd_add(dirs, _config, title):
     if not title:
         log.error("Title required")
         return 1

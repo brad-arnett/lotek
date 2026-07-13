@@ -2,7 +2,7 @@ import shutil
 from lotek.lib.logger import log
 
 
-def cmd_clean(dirs):
+def cmd_clean(dirs, _config):
     """Clean the output directory"""
     output = dirs.OUTPUT
     if output.exists():

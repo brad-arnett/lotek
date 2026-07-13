@@ -1,10 +1,9 @@
 """helper functions for time"""
 
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
-
-def now_string(delim="\n"):
+def now_string(config, delim="\n"):
     """formatted with the tzone of pac, newline delimited"""
-    from lotek.lib.context import pac, config
-
+    pac = ZoneInfo(config.rss.timezone)
     return datetime.now(pac).strftime(config.date_format.format) + delim

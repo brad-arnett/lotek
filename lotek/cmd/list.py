@@ -16,8 +16,7 @@ def _table(headers, rows):
         print("│ " + " │ ".join(str(c).ljust(w) for c, w in zip(row, widths)) + " │")
 
 
-def cmd_list(dirs):
-    from lotek.lib.context import config
+def cmd_list(dirs, config):
 
     posts_dir = dirs.CONTENT_POSTS
     if not posts_dir.exists():

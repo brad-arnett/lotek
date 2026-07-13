@@ -16,18 +16,15 @@ from lotek.lib.warp import warp_content
 from lotek.plugins.rss import generate_rss
 from lotek.plugins.robots import generate_robots
 
-def _build(dirs, parallel=True):
+def _build(dirs, config, parallel=True):
     """main entry point"""
-    # runtime import to get the right context
-    from lotek.lib.context import config
-
     out = dirs.OUTPUT
     log.info("building lotek at %s", out)
     out.mkdir(exist_ok=True)
     dirs.OUTPUT_POSTS.mkdir(exist_ok=True)
     dirs.OUTPUT_STATIC.mkdir(exist_ok=True)
     init_formatter(dirs, config)
-    posts = load_posts(dirs)
+    posts = load_posts(dirs, config)
     buildable = []
     # hash needs to happen after posts load so we don't accidentally hash an
     # embargoed post without building it, leaving it unbuildable in the future
@@ -39,27 +36,27 @@ def _build(dirs, parallel=True):
     
     # Use parallel version if enabled
     if parallel:
-        measure(generate_posts_parallel, dirs, buildable, out, stage_name="posts")
+        measure(generate_posts_parallel, dirs, config, buildable, out, stage_name="posts")
     else:
-        measure(generate_posts, dirs, buildable, out, stage_name="posts")
+        measure(generate_posts, dirs, config, buildable, out, stage_name="posts")
 
     if parallel:
-        measure(generate_pages_parallel, dirs, out, stage_name="pages")
+        measure(generate_pages_parallel, dirs, config, out, stage_name="pages")
     else:
-        measure(generate_pages, dirs, out, stage_name="pages")
+        measure(generate_pages, dirs, config, out, stage_name="pages")
 
     if config.features.robotstxt:
         log.info("generating robots.txt...")
-        measure(generate_robots, posts, out, stage_name="robots.txt")
+        measure(generate_robots, config, posts, out, stage_name="robots.txt")
     if config.features.rss:
         log.info("generating RSS feed...")
-        measure(generate_rss, dirs, posts, out, stage_name="rss")
-    measure(generate_index_landing, dirs, posts, out, stage_name="index")
+        measure(generate_rss, dirs, config, posts, out, stage_name="rss")
+    measure(generate_index_landing, dirs, config, posts, out, stage_name="index")
     measure(wipe_and_copy_to_output_dir, dirs, out, stage_name="static")
     log.info("built %s posts", len(posts))
 
     last_file = out / "_last"
-    last_file.write_text(now_string())
+    last_file.write_text(now_string(config))
 
-def build(dirs, parallel=True):
-    measure(_build, dirs, parallel, stage_name="build")
+def build(dirs, config, parallel=True):
+    measure(_build, dirs, config, parallel, stage_name="build")
