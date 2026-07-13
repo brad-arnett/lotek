@@ -4,7 +4,6 @@ import shutil
 import sys
 from lotek.lib.logger import log
 from lotek.lib.highlight import process_code_blocks
-from lotek.lib.context import config
 
 def _has_pandoc():
     return shutil.which("pandoc") is not None

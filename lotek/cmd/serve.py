@@ -5,7 +5,6 @@ import time
 from pathlib import Path
 from lotek.lib.logger import log
 from lotek.lib.dirs import Dirs
-from lotek.lib.context import update_config
 from lotek.lib.site_config import load_config
 
 
@@ -42,10 +41,7 @@ def http_server(port, output_dir):
 def rebuild():
     """Rebuild the site."""
     wd = Path.cwd()
-    config = load_config(wd / "site-config.toml")
-    update_config(config)
     dirs = Dirs(wd)
-    log.debug("file change detected, rebuilding...")
     from lotek.build import build
     build(dirs)
 

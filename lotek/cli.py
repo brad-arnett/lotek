@@ -89,6 +89,7 @@ def main():
         _main(args, wd, None)
         return
     wd = Path.cwd()
+    from lotek.lib.logger import log
     config = load_config(wd / "site-config.toml")
     try:
         if args.force:
