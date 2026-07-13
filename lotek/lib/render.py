@@ -1,9 +1,10 @@
+from types import SimpleNamespace
 import subprocess
 import shutil
 import sys
 from lotek.lib.logger import log
 from lotek.lib.highlight import process_code_blocks
-
+from lotek.lib.context import config
 
 def _has_pandoc():
     return shutil.which("pandoc") is not None
@@ -30,6 +31,17 @@ def md_to_html(dirs, text, config):
 
 def render(dirs, template_name, replacements):
     text = (dirs.TEMPLATES / template_name).read_text()
+
+    # Apply user template values from config.template
+    if config and hasattr(config, "template"):
+        template_values = getattr(config, "template", {})
+        if isinstance(template_values, SimpleNamespace):
+            template_values = template_values.__dict__
+        for key, value in template_values.items():
+            print(key)
+            if f"[[{key}]]" in text:
+                replacements[key] = value if value else ""
+
     for key, value in replacements.items():
         if value:
             text = text.replace(f"[[{key}]]", value)
@@ -50,17 +62,23 @@ def render_wrap(dirs, config, content, title, desc=None, url=None, page_type="we
     """convenience wrapper for rendering a page with the base template"""
 
     url = url or config.site.url
-    return render(
-        dirs,
-        "base.html",
-        {
-            "TITLE": title,
-            "CONTENT": content,
-            "SITE_TITLE": config.site.title,
-            "SITE_DESC": config.site.description,
-            "META_DESC": desc or config.site.description,
-            "META_URL": url or config.site.url,
-            "META_TYPE": page_type,
-            "NAV": _nav_html(config),
-        },
-    )
+    replacements = {
+        "TITLE": title,
+        "CONTENT": content,
+        "SITE_TITLE": config.site.title,
+        "SITE_DESC": config.site.description,
+        "META_DESC": desc or config.site.description,
+        "META_URL": url or config.site.url,
+        "META_TYPE": page_type,
+        "NAV": _nav_html(config),
+    }
+
+    # Add user template values from config
+    if config and hasattr(config, "site"):
+        log.debug(config)
+        template_values = config.template
+        log.debug("User template values: %s", template_values.__dict__)
+        replacements.update(template_values.__dict__)
+        log.debug("Replacements: %s", replacements)
+
+    return render(dirs, "base.html", replacements)

@@ -42,3 +42,9 @@ href = "/feed.xml"
 [site.lotek]
 log_level = "info"  # logging level (debug, info, warning, error, critical)
 warp = true         # differential build, set to false to rebuild entire site every time
+
+# Optional template values you can use in any template file.
+# Add conflicts with built-in values (TITLE, CONTENT, NAV, etc.) and build will fail.
+[site.template]
+# tagline = "A personal blog"
+# author = "Your Name"

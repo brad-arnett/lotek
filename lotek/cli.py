@@ -90,12 +90,18 @@ def main():
         return
     wd = Path.cwd()
     config = load_config(wd / "site-config.toml")
-    if not args.command:
-        print(USAGE)
-        return 0
+    try:
+        if args.force:
+            print("force flag is set, building all posts")
+            config.lotek.warp = True
+    except Exception as e:
+        print(e)
     _main(args, wd, config)
 
 def _main(args, wd, config):
+    if not args.command:
+        print(USAGE)
+        return 0
 
     # dirs derives from the current working directory (except init)
     dirs = Dirs(wd)

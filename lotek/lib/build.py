@@ -15,6 +15,7 @@ from lotek.lib.logger import log
 from lotek.lib.warp import warp_content
 from lotek.plugins.rss import generate_rss
 from lotek.plugins.robots import generate_robots
+from lotek.lib.context import config
 
 def _build(dirs, config, parallel=True):
     """main entry point"""
@@ -33,7 +34,7 @@ def _build(dirs, config, parallel=True):
         buildable = warp_content(dirs, posts, "posts")
     else:
         buildable = posts
-    
+
     # Use parallel version if enabled
     if parallel:
         measure(generate_posts_parallel, dirs, config, buildable, out, stage_name="posts")
