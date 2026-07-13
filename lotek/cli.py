@@ -89,14 +89,7 @@ def main():
         _main(args, wd, None)
         return
     wd = Path.cwd()
-    from lotek.lib.logger import log
     config = load_config(wd / "site-config.toml")
-    try:
-        if args.force:
-            print("force flag is set, building all posts")
-            config.lotek.warp = True
-    except Exception as e:
-        print(e)
     _main(args, wd, config)
 
 def _main(args, wd, config):

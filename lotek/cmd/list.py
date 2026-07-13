@@ -17,7 +17,6 @@ def _table(headers, rows):
 
 
 def cmd_list(dirs, config):
-
     posts_dir = dirs.CONTENT_POSTS
     if not posts_dir.exists():
         log.info("No posts directory found")

@@ -41,7 +41,6 @@ def render(dirs, template_name, replacements, config=None):
         if isinstance(template_values, SimpleNamespace):
             template_values = template_values.__dict__
         for key, value in template_values.items():
-            print(key)
             if f"[[{key}]]" in text:
                 replacements[key] = value if value else ""
 
