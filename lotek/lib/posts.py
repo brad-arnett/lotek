@@ -24,6 +24,7 @@ def _render_single_post(args):
             "DATE": post["date"],
             "CONTENT": html,
         },
+        config,
     )
     post_url = f"{config.site.url}/posts/{post['slug']}.html"
     page = render_wrap(
@@ -104,6 +105,7 @@ def generate_posts(dirs, config, posts, out):
                 "DATE": post["date"],
                 "CONTENT": html,
             },
+            config,
         )
         post_url = f"{config.site.url}/posts/{post['slug']}.html"
         page = render_wrap(

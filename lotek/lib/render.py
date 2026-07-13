@@ -28,8 +28,12 @@ def md_to_html(dirs, text, config):
         return md.markdown(text, extensions=["extra", "smarty"])
 
 
-def render(dirs, template_name, replacements):
-    text = (dirs.TEMPLATES / template_name).read_text()
+def render(dirs, template_name, replacements, config=None):
+    template_path = dirs.TEMPLATES / template_name
+    if not template_path.exists():
+        # Fall back to pkg templates
+        template_path = dirs.PKG_TEMPLATES / template_name
+    text = template_path.read_text()
 
     # Apply user template values from config.template
     if config and hasattr(config, "template"):
@@ -80,4 +84,4 @@ def render_wrap(dirs, config, content, title, desc=None, url=None, page_type="we
         replacements.update(template_values.__dict__)
         log.debug("Replacements: %s", replacements)
 
-    return render(dirs, "base.html", replacements)
+    return render(dirs, "base.html", replacements, config)

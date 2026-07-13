@@ -25,5 +25,6 @@ def generate_rss(dirs, config, posts, out):
             "ITEMS": feed_items,
             "BUILD_DATE": build_date,
         },
+        config,
     )
     (out / "feed.xml").write_text(feed)

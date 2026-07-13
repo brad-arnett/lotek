@@ -12,7 +12,7 @@ def generate_index_landing(dirs, config, posts, out):
     for post in posts:
         items += html_stub_index(post)
     content = render(
-        dirs, "index.html", {"ITEMS": items, "DESC": config.site.description}
+        dirs, "index.html", {"ITEMS": items, "DESC": config.site.description}, config
     )
     (out / "index.html").write_text(
         render_wrap(dirs, config, content, config.site.title, url=config.site.url)

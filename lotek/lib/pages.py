@@ -29,8 +29,9 @@ def _render_single_page(args):
         {
             "TITLE": title,
             "DATE": meta.get("date", ""),
-            "CONTENT": html,
+            "BODY": html,
         },
+        config,
     )
     page = render_wrap(
         dirs,

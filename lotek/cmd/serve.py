@@ -42,8 +42,9 @@ def rebuild():
     """Rebuild the site."""
     wd = Path.cwd()
     dirs = Dirs(wd)
-    from lotek.build import build
-    build(dirs)
+    config = load_config(wd / "site-config.toml")
+    from lotek.lib.build import build
+    build(dirs, config)
 
 
 def cmd_serve(dirs, _config, port=8000):
@@ -69,7 +70,7 @@ def cmd_serve(dirs, _config, port=8000):
         server_thread.join()
     except Exception as e:
         log.error(f"Build failed: {e}")
-        log.exc()
+        log.exc(e)
         server_thread.join()
         raise
     return 0

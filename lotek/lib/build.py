@@ -23,6 +23,7 @@ def _build(dirs, config, parallel=True):
     out.mkdir(exist_ok=True)
     dirs.OUTPUT_POSTS.mkdir(exist_ok=True)
     dirs.OUTPUT_STATIC.mkdir(exist_ok=True)
+    dirs.LOTEK.mkdir(exist_ok=True)
     formatter = init_formatter(dirs, config)
     posts = load_posts(dirs, config)
     buildable = []
