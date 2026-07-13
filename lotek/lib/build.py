@@ -6,8 +6,8 @@ Requires: pandoc in PATH or markdown module
 
 from lotek.lib.site_time import now_string
 from lotek.lib.highlight import init_formatter
-from lotek.lib.pages import generate_pages, generate_pages_parallel
-from lotek.lib.posts import generate_posts, generate_posts_parallel, load_posts
+from lotek.lib.pages import generate_pages_parallel
+from lotek.lib.posts import generate_posts_parallel, load_posts
 from lotek.lib.util import measure
 from lotek.lib.index import generate_index_landing
 from lotek.lib.static import wipe_and_copy_to_output_dir
@@ -16,7 +16,7 @@ from lotek.lib.warp import warp_content
 from lotek.plugins.rss import generate_rss
 from lotek.plugins.robots import generate_robots
 
-def _build(dirs, config, parallel=True):
+def _build(dirs, config):
     """main entry point"""
     out = dirs.OUTPUT
     log.info("building lotek at %s", out)
@@ -35,16 +35,8 @@ def _build(dirs, config, parallel=True):
     else:
         buildable = posts
 
-    # Use parallel version if enabled
-    if parallel:
-        measure(generate_posts_parallel, dirs, config, buildable, out, stage_name="posts")
-    else:
-        measure(generate_posts, dirs, config, buildable, out, stage_name="posts")
-
-    if parallel:
-        measure(generate_pages_parallel, dirs, config, out, stage_name="pages")
-    else:
-        measure(generate_pages, dirs, config, out, stage_name="pages")
+    measure(generate_posts_parallel, dirs, config, buildable, out, stage_name="posts")
+    measure(generate_pages_parallel, dirs, config, out, stage_name="pages")
 
     if config.features.robotstxt:
         log.info("generating robots.txt...")
@@ -59,5 +51,5 @@ def _build(dirs, config, parallel=True):
     last_file = out / "_last"
     last_file.write_text(now_string(config))
 
-def build(dirs, config, parallel=True):
-    measure(_build, dirs, config, parallel, stage_name="build")
+def build(dirs, config):
+    measure(_build, dirs, config, stage_name="build")

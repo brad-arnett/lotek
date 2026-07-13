@@ -102,38 +102,3 @@ def generate_pages_parallel(dirs, config, out):
                     log.exc(e)
     else:
         log.warning("page batch size is zero, no work to do...")
-
-
-def generate_pages(dirs, config, out):
-    """Render pages sequentially (legacy behavior)."""
-    pages_dir = dirs.CONTENT_PAGES
-    if not pages_dir.exists():
-        return
-    for path in sorted(pages_dir.glob("*.md")):
-        meta, body = parse_frontmatter(path.read_text())
-        if meta.get("publish", "").lower() == "false":
-            log.info("skipping page %s as it is not published", path.stem)
-            continue
-        start = time.perf_counter()
-        slug = path.stem
-        title = meta.get("title", slug)
-        html = md_to_html(dirs, body, config)
-        content = render(
-            dirs,
-            "post.html",
-            {
-                "TITLE": title,
-                "DATE": meta.get("date", ""),
-                "CONTENT": html,
-            },
-        )
-        (out / f"{slug}.html").write_text(
-            render_wrap(
-                dirs,
-                config,
-                content,
-                f"{title} -- {config.site.title}",
-                url=f"{config.site.url}/{slug}.html",
-            )
-        )
-        log.debug("processed page: '%s' in %.2fs", title, time.perf_counter() - start)

@@ -89,39 +89,6 @@ def generate_posts_parallel(dirs, config, posts, out):
                 log.exc(e)
 
 
-def generate_posts(dirs, config, posts, out):
-    """Render posts sequentially (legacy behavior)."""
-
-    posts_dir = out / "posts"
-    posts_dir.mkdir(exist_ok=True)
-    for i, post in enumerate(posts):
-        start = time.perf_counter()
-        html = md_to_html(dirs, post["body"], config)
-        content = render(
-            dirs,
-            "post.html",
-            {
-                "TITLE": post["title"],
-                "DATE": post["date"],
-                "CONTENT": html,
-            },
-            config,
-        )
-        post_url = f"{config.site.url}/posts/{post['slug']}.html"
-        page = render_wrap(
-            dirs,
-            config,
-            content,
-            f"{post['title']} -- {config.site.title}",
-            desc=post["desc"],
-            url=post_url,
-            page_type="article",
-        )
-        (posts_dir / f"{post['slug']}.html").write_text(page)
-        short_title = post["title"] if len(post["title"]) < 20 else post["title"][0:17] + "..."
-        log.debug("%s done in %.2fs", short_title, time.perf_counter() - start)
-
-
 def load_posts(dirs, config, posts_dir=None):
     if posts_dir is None:
         posts_dir = dirs.CONTENT_POSTS

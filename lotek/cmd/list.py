@@ -52,6 +52,5 @@ def cmd_list(dirs, config):
         else:
             state = "live"
         rows.append([date_str, meta.get("title", ""), f.stem, state])
-    log.info("%s post(s)", len(posts))
     _table(["date", "title", "slug", "status"], rows)
     return 0
