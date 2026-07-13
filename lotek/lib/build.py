@@ -23,7 +23,7 @@ def _build(dirs, config, parallel=True):
     out.mkdir(exist_ok=True)
     dirs.OUTPUT_POSTS.mkdir(exist_ok=True)
     dirs.OUTPUT_STATIC.mkdir(exist_ok=True)
-    init_formatter(dirs, config)
+    formatter = init_formatter(dirs, config)
     posts = load_posts(dirs, config)
     buildable = []
     # hash needs to happen after posts load so we don't accidentally hash an

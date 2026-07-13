@@ -9,13 +9,11 @@ from unittest.mock import patch
 from lotek.lib.init import init
 from lotek.lib.dirs import Dirs
 from lotek.lib.site_config import load_config
-from lotek.build import (
-    load_posts,
-    generate_posts,
-    generate_index_landing,
-    wipe_and_copy_to_output_dir,
-    build,
-)
+from lotek.lib.build import build
+from lotek.lib.posts import load_posts
+from lotek.lib.index import generate_index_landing
+from lotek.lib.static import wipe_and_copy_to_output_dir
+from lotek.lib.posts import generate_posts
 
 def get_temp_dir():
     return Path(tempfile.mkdtemp())
@@ -244,21 +242,24 @@ class TestFullBuild(unittest.TestCase):
         self.dirs = None
         self.config = None
 
-    @patch("lotek.build.wipe_and_copy_to_output_dir")
-    @patch("lotek.build.generate_posts")
-    @patch("lotek.build.generate_robots")
-    @patch("lotek.build.generate_rss")
-    @patch("lotek.build.generate_index_landing")
-    @patch("lotek.build.load_posts")
+    @patch("lotek.lib.build.wipe_and_copy_to_output_dir")
+    @patch("lotek.lib.build.load_posts")
+    @patch("lotek.lib.build.generate_pages_parallel")
+    @patch("lotek.lib.build.generate_posts_parallel")
+    @patch("lotek.lib.build.generate_index_landing")
+    @patch("lotek.lib.build.generate_rss")
+    @patch("lotek.lib.build.generate_robots")
     def test_build_executes_all(
-        self, mock_load, mock_gen_idx, mock_rss, mock_robots, mock_posts, mock_wipe
+        self, mock_robots, mock_rss, mock_idx, mock_posts, mock_pages, mock_load, mock_wipe
     ):
         mock_load.return_value = []
         build(self.dirs, self.config)
         mock_load.assert_called_once()
-        mock_gen_idx.assert_called_once()
+        mock_idx.assert_called_once()
         mock_rss.assert_called_once()
         mock_robots.assert_called_once()
+        mock_posts.assert_called_once()
+        mock_pages.assert_called_once()
 
 
 if __name__ == "__main__":
