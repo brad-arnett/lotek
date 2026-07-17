@@ -156,7 +156,6 @@ class TestWipeAndCopyToOutputDir(unittest.TestCase):
         self.test_output = None
         self.dirs = None
 
-
     def test_wipe_and_copy_creates_static(self):
         wipe_and_copy_to_output_dir(self.dirs, self.dirs.STATIC)
         self.assertTrue((self.test_output / "static").exists())

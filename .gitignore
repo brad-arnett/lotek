@@ -21,3 +21,4 @@ output/
 
 # User config (site-specific, not committed)
 site-config.toml
+.lotek
