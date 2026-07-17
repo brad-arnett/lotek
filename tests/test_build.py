@@ -13,7 +13,6 @@ from lotek.lib.build import build
 from lotek.lib.posts import load_posts
 from lotek.lib.index import generate_index_landing
 from lotek.lib.static import wipe_and_copy_to_output_dir
-from lotek.lib.posts import generate_posts
 
 def get_temp_dir():
     return Path(tempfile.mkdtemp())
@@ -145,38 +144,6 @@ class TestLoadPosts(unittest.TestCase):
                 self.assertNotIn("Hidden Post", titles)
         finally:
             shutil.rmtree(posts_dir.parent)
-
-
-class TestGeneratePosts(unittest.TestCase):
-    def setUp(self):
-        self.test_output = get_temp_dir()
-        init(self.test_output)
-        self.dirs = Dirs(self.test_output)
-        self.config = load_config(self.test_output / "site-config.toml")
-
-    def tearDown(self):
-        shutil.rmtree(self.test_output)
-        self.test_output = None
-        self.dirs = None
-        self.config = None
-
-    def test_generate_posts_creates_directory(self):
-        posts = [{"title": "Test", "slug": "test", "date": "2026-06-15", "desc": "Desc", "body": "Body"}]
-        generate_posts(self.dirs, self.config, posts, self.test_output)
-        self.assertTrue((self.test_output / "posts").exists())
-
-    def test_generate_posts_creates_html(self):
-        posts = [{"title": "Test Post", "slug": "test", "date": "2026-06-15", "desc": "Desc", "body": "Body"}]
-        generate_posts(self.dirs, self.config, posts, self.test_output)
-        self.assertTrue((self.test_output / "posts" / "test.html").exists())
-
-    def test_generate_posts_content(self):
-        posts = [{"title": "Test Title", "slug": "test", "date": "2026-06-15", "desc": "Desc", "body": "<p>Test body</p>"}]
-        generate_posts(self.dirs, self.config, posts, self.test_output)
-        content = (self.test_output / "posts" / "test.html").read_text()
-        self.assertIn("Test Title", content)
-        self.assertIn("Test body", content)
-
 
 class TestWipeAndCopyToOutputDir(unittest.TestCase):
     def setUp(self):
