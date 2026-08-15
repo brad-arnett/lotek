@@ -4,15 +4,15 @@
 Requires: pandoc in PATH or markdown module
 """
 
-from lotek.lib.site_time import now_string
-from lotek.lib.highlight import init_formatter
-from lotek.lib.pages import generate_pages_parallel
-from lotek.lib.posts import generate_posts_parallel, load_posts
+from lotek.lib.content.site_time import now_string
+from lotek.lib.content.highlight import init_formatter
+from lotek.lib.content.pages import generate_pages_parallel
+from lotek.lib.content.posts import generate_posts_parallel, load_posts
 from lotek.lib.util.measure import measure
-from lotek.lib.index import generate_index_landing
-from lotek.lib.static import wipe_and_copy_to_output_dir
-from lotek.lib.logger import log
-from lotek.lib.warp import warp_content
+from lotek.lib.content.index import generate_index_landing
+from lotek.lib.content.static import wipe_and_copy_to_output_dir
+from lotek.lib.util.logger import log
+from lotek.lib.content.warp import warp_content
 from lotek.plugins.rss import generate_rss
 from lotek.plugins.robots import generate_robots
 

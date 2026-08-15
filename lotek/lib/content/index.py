@@ -1,8 +1,8 @@
 """index page generator"""
 
-from lotek.lib.site_time import now_string
-from lotek.lib.html_stubs import html_stub_index
-from lotek.lib.render import render, render_wrap
+from lotek.lib.content.site_time import now_string
+from lotek.lib.content.html_stubs import html_stub_index
+from lotek.lib.content.render import render, render_wrap
 
 
 def generate_index_landing(dirs, config, posts, out):

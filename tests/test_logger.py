@@ -3,7 +3,7 @@
 import sys
 import logging
 import pytest
-from lotek.lib.logger import log
+from lotek.lib.util.logger import log
 
 from logging import INFO, WARNING, ERROR, DEBUG, CRITICAL
 

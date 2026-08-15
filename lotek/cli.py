@@ -93,7 +93,7 @@ def run_cmd(args, wd, config):
                 print("setting force (warp=False)")
                 config.lotek.warp = False
             if args.debug:
-                from lotek.lib.logger import log  # pylint: disable=import-outside-toplevel
+                from lotek.lib.util.logger import log  # pylint: disable=import-outside-toplevel
                 print("setting debug")
                 log.set_level(logging.DEBUG)
             return cmd_build(dirs, config)

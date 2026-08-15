@@ -1,6 +1,6 @@
 """build.py cmd"""
 import lotek.lib.build as build_module
-from lotek.lib.logger import log
+from lotek.lib.util.logger import log
 from lotek.lib.util.measure import measure
 
 def cmd_build(dirs, config):

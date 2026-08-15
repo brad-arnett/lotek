@@ -4,7 +4,7 @@ import unittest
 import tempfile
 from pathlib import Path
 from lotek.lib.config.dirs import Dirs
-from lotek.lib.render import md_to_html, render, render_wrap
+from lotek.lib.content.render import md_to_html, render, render_wrap
 from lotek.lib.init import init
 from lotek.lib.config.site_config import load_config
 

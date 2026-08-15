@@ -1,5 +1,5 @@
 from datetime import datetime
-from lotek.lib.logger import log
+from lotek.lib.util.logger import log
 
 
 def cmd_add(dirs, _config, title):

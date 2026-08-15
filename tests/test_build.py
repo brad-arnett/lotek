@@ -10,9 +10,9 @@ from lotek.lib.init import init
 from lotek.lib.config.dirs import Dirs
 from lotek.lib.config.site_config import load_config
 from lotek.lib.build import build
-from lotek.lib.posts import load_posts
-from lotek.lib.index import generate_index_landing
-from lotek.lib.static import wipe_and_copy_to_output_dir
+from lotek.lib.content.posts import load_posts
+from lotek.lib.content.index import generate_index_landing
+from lotek.lib.content.static import wipe_and_copy_to_output_dir
 
 def get_temp_dir():
     return Path(tempfile.mkdtemp())
@@ -38,7 +38,7 @@ class TestLoadPosts(unittest.TestCase):
             "---\ntitle: Test Post\ndate: 2026-06-15\ndesc: Test description\n---\n\nThis is a test post.\n"
         )
         try:
-            with patch("lotek.lib.posts.parse_frontmatter") as mock_pm:
+            with patch("lotek.lib.content.posts.parse_frontmatter") as mock_pm:
                 mock_pm.return_value = (
                     {"title": "Test Post", "date": "2026-06-15", "desc": "Test description"},
                     "Test body",
@@ -78,7 +78,7 @@ class TestLoadPosts(unittest.TestCase):
         )
         try:
             with patch(
-                "lotek.lib.posts.parse_frontmatter",
+                "lotek.lib.content.posts.parse_frontmatter",
                 return_value=({"title": "Hidden Post", "date": "2026-06-15", "publish": "false"}, "Hidden body"),
             ):
                 posts = load_posts(self.dirs, self.config, posts_dir)
@@ -93,7 +93,7 @@ class TestLoadPosts(unittest.TestCase):
         )
         try:
             with patch(
-                "lotek.lib.posts.parse_frontmatter",
+                "lotek.lib.content.posts.parse_frontmatter",
                 return_value=({"title": "Published Post", "date": "2026-06-15", "publish": "true"}, "Published body"),
             ):
                 posts = load_posts(self.dirs, self.config, posts_dir)
@@ -110,7 +110,7 @@ class TestLoadPosts(unittest.TestCase):
         )
         try:
             with patch(
-                "lotek.lib.posts.parse_frontmatter",
+                "lotek.lib.content.posts.parse_frontmatter",
                 return_value=({"title": "Default Post", "date": "2026-06-15"}, "Default body"),
             ):
                 posts = load_posts(self.dirs, self.config, posts_dir)
@@ -135,7 +135,7 @@ class TestLoadPosts(unittest.TestCase):
                 return ({"title": "Default Post", "date": "2026-06-15"}, "Default body")
 
         try:
-            with patch("lotek.lib.posts.parse_frontmatter", side_effect=mock_pm_side_effect):
+            with patch("lotek.lib.content.posts.parse_frontmatter", side_effect=mock_pm_side_effect):
                 posts = load_posts(self.dirs, self.config, posts_dir)
                 self.assertEqual(len(posts), 3) # +1 because init creates a welcome post
                 titles = [p["title"] for p in posts]

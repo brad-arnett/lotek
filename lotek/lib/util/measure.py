@@ -1,5 +1,5 @@
 import time
-from lotek.lib.logger import log
+from lotek.lib.util.logger import log
 
 
 def measure(func, *args, stage_name=None):

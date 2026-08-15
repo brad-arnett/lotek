@@ -18,8 +18,8 @@ def test_environment(monkeypatch):
         cfg = load_config(Path(tmpdir) / "site-config.toml")
         
         # Patch key modules
-        import lotek.lib.posts as posts_module
-        import lotek.lib.render as render_module
+        import lotek.lib.content.posts as posts_module
+        import lotek.lib.content.render as render_module
         import lotek.plugins.rss as rss_module
         import tests.test_rss as test_rss
         
@@ -29,8 +29,8 @@ def test_environment(monkeypatch):
         monkeypatch.setattr(cfg.site, "description", "a tiny static site generator")
         
         # Patch key modules
-        import lotek.lib.posts as posts_module
-        import lotek.lib.render as render_module
+        import lotek.lib.content.posts as posts_module
+        import lotek.lib.content.render as render_module
         import lotek.plugins.rss as rss_module
         import tests.test_rss as test_rss
         

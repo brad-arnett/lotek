@@ -5,7 +5,7 @@ from pathlib import Path
 import tempfile
 
 from lotek.lib.config.dirs import Dirs
-from lotek.lib.warp import Warp, warp_content
+from lotek.lib.content.warp import Warp, warp_content
 from lotek.lib.config.site_config import load_config
 
 

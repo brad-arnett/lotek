@@ -1,7 +1,7 @@
 """Test HTML stubs generation."""
 
 import unittest
-from lotek.lib.html_stubs import html_stub_index, html_stub_feed_items
+from lotek.lib.content.html_stubs import html_stub_index, html_stub_feed_items
 
 
 class TestHTMLStubIndex(unittest.TestCase):

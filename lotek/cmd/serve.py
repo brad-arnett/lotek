@@ -3,7 +3,7 @@ import sys
 import threading
 import time
 from pathlib import Path
-from lotek.lib.logger import log
+from lotek.lib.util.logger import log
 from lotek.lib.config.dirs import Dirs
 from lotek.lib.config.site_config import load_config
 

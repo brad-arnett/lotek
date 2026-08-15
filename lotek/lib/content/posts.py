@@ -4,9 +4,9 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from lotek.lib.render import md_to_html, render, render_wrap
+from lotek.lib.content.render import md_to_html, render, render_wrap
 from lotek.lib.content.frontmatter import parse_frontmatter
-from lotek.lib.logger import log
+from lotek.lib.util.logger import log
 
 # Default batch size for parallel processing
 DEFAULT_BATCH_SIZE = 10

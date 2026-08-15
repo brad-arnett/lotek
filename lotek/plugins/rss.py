@@ -2,8 +2,8 @@
 
 from datetime import datetime
 from zoneinfo import ZoneInfo
-from ..lib.html_stubs import html_stub_feed_items
-from ..lib.render import render, md_to_html
+from ..lib.content.html_stubs import html_stub_feed_items
+from ..lib.content.render import render, md_to_html
 
 RFC822 = "%a, %d %b %Y %H:%M:%S %z"
 

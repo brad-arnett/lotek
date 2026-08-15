@@ -4,7 +4,7 @@ import unittest
 from pathlib import Path
 import tempfile
 import shutil
-from lotek.lib.highlight import process_code_blocks
+from lotek.lib.content.highlight import process_code_blocks
 from lotek.lib.init import init
 from lotek.lib.config.site_config import load_config
 

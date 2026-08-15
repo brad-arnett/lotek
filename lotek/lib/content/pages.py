@@ -2,10 +2,10 @@
 
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from lotek.lib.render import render, render_wrap, md_to_html
+from lotek.lib.content.render import render, render_wrap, md_to_html
 from lotek.lib.content.frontmatter import parse_frontmatter
-from lotek.lib.logger import log
-from lotek.lib.warp import warp_content
+from lotek.lib.content.warp import warp_content
+from lotek.lib.util.logger import log
 
 # Default batch size for parallel processing
 DEFAULT_BATCH_SIZE = 10
@@ -29,7 +29,7 @@ def _render_single_page(args):
         {
             "TITLE": title,
             "DATE": meta.get("date", ""),
-            "BODY": html,
+            "CONTENT": html,
         },
         config,
     )

@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from lotek.lib.content.frontmatter import parse_frontmatter
-from lotek.lib.logger import log
+from lotek.lib.util.logger import log
 
 
 def _table(headers, rows):
