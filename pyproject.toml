@@ -45,7 +45,7 @@ Repository = "https://github.com/brad-arnett/lotek.run"
 include = ["lotek*"]
 
 [tool.setuptools.package-data]
-lotek = ["layouts/**", "site-default.toml"]
+lotek = ["layouts/**"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
