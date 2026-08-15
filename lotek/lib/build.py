@@ -16,7 +16,7 @@ from lotek.lib.warp import warp_content
 from lotek.plugins.rss import generate_rss
 from lotek.plugins.robots import generate_robots
 
-def _build(dirs, config):
+def build(dirs, config):
     """main entry point"""
     out = dirs.OUTPUT
     log.info("building lotek at %s", out)
@@ -24,7 +24,7 @@ def _build(dirs, config):
     dirs.OUTPUT_POSTS.mkdir(exist_ok=True)
     dirs.OUTPUT_STATIC.mkdir(exist_ok=True)
     dirs.LOTEK.mkdir(exist_ok=True)
-    formatter = init_formatter(dirs, config)
+    init_formatter(dirs, config)
     posts = load_posts(dirs, config)
     buildable = []
     # hash needs to happen after posts load so we don't accidentally hash an
@@ -50,6 +50,3 @@ def _build(dirs, config):
 
     last_file = out / "_last"
     last_file.write_text(now_string(config))
-
-def build(dirs, config):
-    measure(_build, dirs, config, stage_name="build")
