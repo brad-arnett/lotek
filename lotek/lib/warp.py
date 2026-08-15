@@ -11,7 +11,7 @@ comparing this hash value to the hash value of the file at build-time.
 
 import hashlib
 from pathlib import Path
-from lotek.lib.dirs import Dirs
+from lotek.lib.config.dirs import Dirs
 from lotek.lib.logger import log
 
 class Warp:

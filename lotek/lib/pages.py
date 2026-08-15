@@ -3,7 +3,7 @@
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from lotek.lib.render import render, render_wrap, md_to_html
-from lotek.lib.frontmatter import parse_frontmatter
+from lotek.lib.content.frontmatter import parse_frontmatter
 from lotek.lib.logger import log
 from lotek.lib.warp import warp_content
 

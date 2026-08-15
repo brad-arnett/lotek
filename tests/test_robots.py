@@ -5,7 +5,7 @@ import tempfile
 import shutil
 from pathlib import Path
 from lotek.plugins.robots import generate_robots, sitemap_url
-from lotek.lib.site_config import load_config
+from lotek.lib.config.site_config import load_config
 
 
 class TestGenerateRobots(unittest.TestCase):

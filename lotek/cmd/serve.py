@@ -4,8 +4,8 @@ import threading
 import time
 from pathlib import Path
 from lotek.lib.logger import log
-from lotek.lib.dirs import Dirs
-from lotek.lib.site_config import load_config
+from lotek.lib.config.dirs import Dirs
+from lotek.lib.config.site_config import load_config
 
 
 def get_watched_files():
@@ -43,7 +43,7 @@ def rebuild():
     wd = Path.cwd()
     dirs = Dirs(wd)
     config = load_config(wd / "site-config.toml")
-    from lotek.lib.build import build
+    from lotek.lib.build import build  # pylint: disable=import-outside-toplevel
     build(dirs, config)
 
 

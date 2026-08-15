@@ -1,7 +1,7 @@
 """Test frontmatter parsing."""
 
 import unittest
-from lotek.lib.frontmatter import parse_frontmatter
+from lotek.lib.content.frontmatter import parse_frontmatter
 
 
 class TestFrontmatter(unittest.TestCase):

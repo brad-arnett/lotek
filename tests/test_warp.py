@@ -4,9 +4,9 @@ import pytest
 from pathlib import Path
 import tempfile
 
-from lotek.lib.dirs import Dirs
+from lotek.lib.config.dirs import Dirs
 from lotek.lib.warp import Warp, warp_content
-from lotek.lib.site_config import load_config
+from lotek.lib.config.site_config import load_config
 
 
 def get_test_dirs(tmpdir):

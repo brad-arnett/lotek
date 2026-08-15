@@ -3,10 +3,10 @@
 import unittest
 import tempfile
 from pathlib import Path
-from lotek.lib.dirs import Dirs
+from lotek.lib.config.dirs import Dirs
 from lotek.lib.render import md_to_html, render, render_wrap
 from lotek.lib.init import init
-from lotek.lib.site_config import load_config
+from lotek.lib.config.site_config import load_config
 
 def get_temp_dir():
     return Path(tempfile.mkdtemp())

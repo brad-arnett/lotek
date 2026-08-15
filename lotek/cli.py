@@ -7,8 +7,8 @@ import sys
 from pathlib import Path
 
 import lotek
-from lotek.lib.dirs import Dirs
-from lotek.lib.site_config import load_config
+from lotek.lib.config.dirs import Dirs
+from lotek.lib.config.site_config import load_config
 from lotek.lib.init import init
 
 # commands

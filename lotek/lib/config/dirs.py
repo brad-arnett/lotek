@@ -26,7 +26,9 @@ class Dirs:
         self.OUTPUT_POSTS = self.CWD / "output" / "posts"
         self.OUTPUT_STATIC = self.CWD / "output" / "static"
 
-        # expected to be buried somewhere in site-packages
-        self.PKG = _pkg_path = Path(__file__).parent.parent
+        # expected to be buried somewhere in site-packages, since dirs is at
+        # lotek/lib/config/dirs.py we need to get three file parents relative to
+        # our path
+        self.PKG = _pkg_path = Path(__file__).parent.parent.parent
         self.PKG_TEMPLATES = self.PKG / "layouts" / layout / "templates"
         self.PKG_STATIC = self.PKG / "layouts" / layout / "static"

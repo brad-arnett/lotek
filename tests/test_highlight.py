@@ -6,7 +6,7 @@ import tempfile
 import shutil
 from lotek.lib.highlight import process_code_blocks
 from lotek.lib.init import init
-from lotek.lib.site_config import load_config
+from lotek.lib.config.site_config import load_config
 
 
 def get_temp_dir():

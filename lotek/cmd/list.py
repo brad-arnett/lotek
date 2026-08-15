@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from lotek.lib.frontmatter import parse_frontmatter
+from lotek.lib.content.frontmatter import parse_frontmatter
 from lotek.lib.logger import log
 
 

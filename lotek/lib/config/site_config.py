@@ -3,7 +3,6 @@
 import os
 from pathlib import Path
 from types import SimpleNamespace
-from zoneinfo import ZoneInfo
 from lotek.lib.logger import log
 
 try:
@@ -11,8 +10,8 @@ try:
 except ImportError:
     import tomli as tomllib
 
-ROOT = Path(__file__).parent.parent
-DEFAULT_CONFIG_TEMPLATE_PATH = ROOT / "site-default.toml"
+ROOT = Path(__file__).parent.parent.parent
+DEFAULT_CONFIG_TEMPLATE_PATH = ROOT / "layouts" / "default" / "site-default.toml"
 
 def _ns(d):
     if isinstance(d, dict):

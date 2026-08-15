@@ -5,7 +5,7 @@ from zoneinfo import ZoneInfo
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from lotek.lib.render import md_to_html, render, render_wrap
-from lotek.lib.frontmatter import parse_frontmatter
+from lotek.lib.content.frontmatter import parse_frontmatter
 from lotek.lib.logger import log
 
 # Default batch size for parallel processing

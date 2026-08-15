@@ -7,8 +7,8 @@ from pathlib import Path
 from unittest.mock import patch
 
 from lotek.lib.init import init
-from lotek.lib.dirs import Dirs
-from lotek.lib.site_config import load_config
+from lotek.lib.config.dirs import Dirs
+from lotek.lib.config.site_config import load_config
 from lotek.lib.build import build
 from lotek.lib.posts import load_posts
 from lotek.lib.index import generate_index_landing

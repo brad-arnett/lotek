@@ -3,8 +3,8 @@
 import shutil
 from datetime import date
 from pathlib import Path
-from lotek.lib.site_config import DEFAULT_CONFIG_TEMPLATE_PATH
-from lotek.lib.dirs import Dirs
+from lotek.lib.config.site_config import DEFAULT_CONFIG_TEMPLATE_PATH
+from lotek.lib.config.dirs import Dirs
 from lotek.lib.logger import log
 
 # Get the package root directory
