@@ -4,21 +4,19 @@
 import argparse
 import logging
 from pathlib import Path
+
 import lotek
-
-from zoneinfo import ZoneInfo
-
 from lotek.lib.dirs import Dirs
 from lotek.lib.site_config import load_config
 from lotek.lib.init import init
-from lotek.lib.site_config import load_config
+
+# commands
 from lotek.cmd.add import cmd_add
 from lotek.cmd.build import cmd_build
 from lotek.cmd.clean import cmd_clean
 from lotek.cmd.list import cmd_list
 from lotek.cmd.publish import cmd_publish, cmd_unpublish
 from lotek.cmd.serve import cmd_serve
-
 
 USAGE = f"""
 lotek - a tiny static site generator

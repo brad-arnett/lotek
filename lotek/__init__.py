@@ -5,7 +5,7 @@ from lotek import cli
 from lotek.lib.build import build
 
 try:
-    __version__ = version("lotek-run")
+    __version__ = version("lotek")
 except PackageNotFoundError:
     __version__ = "unknown"
 
