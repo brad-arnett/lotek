@@ -7,9 +7,5 @@ try:
 except PackageNotFoundError:
     __version__ = "unknown"
 
-from lotek import cli
-from lotek.lib.build import build
-
-
-def main():
-    cli.main()
+# must import after __version__ definition or version will always be unknown
+from lotek import cli # pylint: disable=wrong-import-position

@@ -3,6 +3,7 @@
 
 import argparse
 import logging
+import sys
 from pathlib import Path
 
 import lotek
@@ -37,6 +38,7 @@ Content:
 
 
 def setup_cmd_parser():
+    """handles argparse setup, returns parser results"""
     parser = argparse.ArgumentParser(prog="lotek")
     subs = parser.add_subparsers(dest="command")
 
@@ -78,23 +80,8 @@ def setup_cmd_parser():
     args = parser.parse_args()
     return args
 
-
-def main():
-    args = setup_cmd_parser()
-    if args.command == "init" and args.path:
-        wd = Path(args.path)
-        # init creates its own config, skip loading
-        _main(args, wd, None)
-        return
-    wd = Path.cwd()
-    config = load_config(wd / "site-config.toml")
-    _main(args, wd, config)
-
-def _main(args, wd, config):
-    if not args.command:
-        print(USAGE)
-        return 0
-
+def run_cmd(args, wd, config):
+    """run the command defined by the command line arguments"""
     # dirs derives from the current working directory (except init)
     dirs = Dirs(wd)
     try:
@@ -103,10 +90,10 @@ def _main(args, wd, config):
             return init(Path.absolute(Path(args.path)))
         if args.command == "build":
             if args.force:
-                print("setting force")
+                print("setting force (warp=False)")
                 config.lotek.warp = False
             if args.debug:
-                from lotek.lib.logger import log
+                from lotek.lib.logger import log  # pylint: disable=import-outside-toplevel
                 print("setting debug")
                 log.set_level(logging.DEBUG)
             return cmd_build(dirs, config)
@@ -131,6 +118,16 @@ def _main(args, wd, config):
         log.error(format_exc())
         return 1
 
-
-if __name__ == "__main__":
-    main()
+def main():
+    """cli.main builds the invocation arguments, """
+    args = setup_cmd_parser()
+    if not args.command:
+        print(USAGE)
+        return 0
+    if args.command == "init" and args.path:
+        wd = Path(args.path)
+        # init creates its own config, skip loading
+        sys.exit(run_cmd(args, wd, None))
+    wd = Path.cwd()
+    config = load_config(wd / "site-config.toml")
+    sys.exit(run_cmd(args, wd, config))
